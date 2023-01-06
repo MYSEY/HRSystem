@@ -39,15 +39,28 @@ class DepartmentCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('name');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        $this->crud->addColumn([
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => '#',
+            'orderable' => false,
+        ])->makeFirstColumn();
+        
+        CRUD::addColumn([
+            'name' => 'name',
+            'label' => 'Name',
+            'type'  => 'text'
+        ]);
+        CRUD::addColumn([
+            'name' => 'created_at',
+            'label' => 'Created',
+            'type'  => 'date'
+        ]);
+        CRUD::addColumn([
+            'name' => 'updated_at',
+            'label' => 'Updated',
+            'type'  => 'date'
+        ]);
     }
 
     /**
@@ -60,13 +73,11 @@ class DepartmentCrudController extends CrudController
     {
         CRUD::setValidation(DepartmentRequest::class);
 
-        CRUD::field('name');
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
+        CRUD::addField([
+            'name' => 'name',
+            'label' => 'Name',
+            'type' => 'text'
+        ]);
     }
 
     /**

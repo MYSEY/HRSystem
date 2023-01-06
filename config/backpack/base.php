@@ -90,6 +90,7 @@ return [
     // Body element classes.
     'body_class' => 'app aside-menu-fixed sidebar-lg-show',
     // Try sidebar-hidden, sidebar-fixed, sidebar-compact, sidebar-lg-show
+    'content_class' => 'content-scroll',
 
     // Sidebar element classes.
     'sidebar_class' => 'nav-box-shadow sidebar bg-white nav-scoll',
@@ -97,6 +98,7 @@ return [
     // Remove "sidebar-transparent" for standard sidebar look
     // Try "sidebar-light" or "sidebar-dark" for dark/light links
     // You can also add a background class like bg-dark, bg-primary, bg-secondary, bg-danger, bg-warning, bg-success, bg-info, bg-blue, bg-light-blue, bg-indigo, bg-purple, bg-pink, bg-red, bg-orange, bg-yellow, bg-green, bg-teal, bg-cyan
+    'nav_class' => '',
 
     // ------
     // FOOTER

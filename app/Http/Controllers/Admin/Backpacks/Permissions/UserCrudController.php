@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Backpacks\Permissions;
 
-use Backpack\CRUD\app\Http\Controllers\CrudController;
-use Backpack\PermissionManager\app\Http\Requests\UserStoreCrudRequest as StoreRequest;
-use Backpack\PermissionManager\app\Http\Requests\UserUpdateCrudRequest as UpdateRequest;
+use App\Models\Department;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use Backpack\PermissionManager\app\Models\Role;
+use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\PermissionManager\app\Http\Requests\UserUpdateCrudRequest as UpdateRequest;
 
 class UserCrudController extends CrudController
 {
@@ -23,33 +25,110 @@ class UserCrudController extends CrudController
 
     public function setupListOperation()
     {
-        $this->crud->addColumns([
-            [
-                'name'  => 'name',
-                'label' => 'Name',
-                'type'  => 'text',
-            ],
-            [
-                'name'  => 'email',
-                'label' => 'Email',
-                'type'  => 'email',
-            ],
-            [ // n-n relationship (with pivot table)
-                'label'     => 'Roles', // Table column heading
-                'type'      => 'select_multiple',
-                'name'      => 'roles', // the method that defines the relationship in your Model
-                'entity'    => 'roles', // the method that defines the relationship in your Model
-                'attribute' => 'name', // foreign key attribute that is shown to user
-                'model'     => config('permission.models.role'), // foreign key model
-            ],
-        ]);
+        $this->crud->disableResponsiveTable();
 
+        $this->crud->addFilter([
+            'name'  => 'role',
+            'type'  => 'dropdown',
+            'label' => 'Role'
+        ], 
+        function(){
+            return Role::pluck('name', 'id')->toArray();
+        }, 
+        function($value) { // if the filter is active
+            $this->crud->addClause('where', 'name', $value);
+        });
+        $this->crud->addFilter([
+            'name'  => 'department_id',
+            'type'  => 'dropdown',
+            'label' => 'Department'
+        ], 
+        function(){
+            return Department::pluck('name', 'id')->toArray();
+        }, 
+        function($value) { // if the filter is active
+            $this->crud->addClause('where', 'name', $value);
+        });
+
+        $this->crud->addColumn([
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => '#',
+            'orderable' => false,
+        ])->makeFirstColumn();
+        
+        $this->crud->addColumn([
+            'name'  => 'profile',
+            'label' => 'Profile',
+            'type'     => 'image',
+            'prefix' => 'images/users/',
+            // 'function' => function () {
+            //     return '<img class="example-image" src="{{asset("images/users/default-user-icon.png")}}" alt="" width="35" style="cursor:pointer"/>';
+            // }
+        ]);
+        $this->crud->addColumn([
+            'name' => 'FullName',
+            'label' => 'Name',
+            'attribute' => 'name',
+            'type' => 'text',
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhere($column['attribute'], 'like', '%' . $searchTerm . '%');
+            }
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'phone',
+            'label' => 'Phone',
+            'type'  => 'text'
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'email',
+            'label' => 'Email',
+            'type'  => 'email',
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'date_of_birth',
+            'label' => 'Date Of Birth',
+            'type'  => 'date',
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'position',
+            'label' => 'Position',
+            'type'  => 'text',
+        ]);
+        $this->crud->addColumn([
+            'label'     => 'Roles', // Table column heading
+            'type'      => 'select_multiple',
+            'name'      => 'roles', // the method that defines the relationship in your Model
+            'entity'    => 'roles', // the method that defines the relationship in your Model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model'     => config('permission.models.role'), // foreign key model
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'department',
+            'label' => 'Department',
+            'type'  => 'closure',
+            'attribute' => 'name',
+            'function' => function ($entry) {
+                return optional($entry->department)->name;
+            },
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhereHas('department', function ($q) use ($column, $searchTerm) {
+                    $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
+                        ->orWhere('name', 'like', '%' . $searchTerm . '%');
+                });
+            }
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'created_at',
+            'label' => 'Created',
+            'type'  => 'date',
+        ]);
     }
 
     public function setupCreateOperation()
     {
         $this->addUserFields();
-        $this->crud->setValidation(StoreRequest::class);
+        $this->crud->setValidation(UserRequest::class);
     }
 
     public function setupUpdateOperation()
@@ -114,7 +193,7 @@ class UserCrudController extends CrudController
 
         $this->crud->addFields([
             [
-                'name'  => 'first_name',
+                'name'  => 'name',
                 'label' => 'First Name',
                 'type'  => 'text',
                 'wrapperAttributes' => $colMd6,
@@ -191,11 +270,12 @@ class UserCrudController extends CrudController
                 'tab'   =>  $tabOne
             ],
             [
-                'name'    => 'Department',
-                'label'   => 'department_id',
-                'type'    => 'select_from_array',
-                'options' => ['draft' => 'Draft (invisible)', 'published' => 'Published (visible)'],
-
+                'name'        => 'department_id',
+                'label'       => "Department",
+                'type'        => 'select2_from_array',
+                'options'     => Department::get()->pluck('name', 'id')->toArray(),
+                'allows_null' => false,
+                'default'     => 'one',
                 'wrapperAttributes' => $colMd6,
                 'tab'   =>  $tabOne
             ],
@@ -210,6 +290,17 @@ class UserCrudController extends CrudController
                 'name'  => 'password_confirmation',
                 'label' => 'Password Confirmation',
                 'type'  => 'password',
+                'wrapperAttributes' => $colMd6,
+                'tab'   =>  $tabOne
+            ],
+            [
+                'label' => "Profile",
+                'name' => "profile",
+                'type' => 'image',
+                'crop' => true, // set to true to allow cropping, false to disable
+                'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+                'disk'      => 's3_bucket', // in case you need to show images from a different disk
+                'prefix'    => 'images/users/', // in case your db value is only the file name (no path), you can use this to prepend your path to the image src (in HTML), before it's shown to the user;
                 'wrapperAttributes' => $colMd6,
                 'tab'   =>  $tabOne
             ],

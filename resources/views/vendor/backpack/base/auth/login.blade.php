@@ -6,6 +6,9 @@
             <h3 class="text-center mb-4">{{ trans('backpack::base.login') }}</h3>
             <div class="card">
                 <div class="card-body">
+                    <div class="text-center">
+                        <img class="card-img-top" style="width:60%" src="{{asset('images/logo/06b123ef-639d-4c51-b6f8-7c3923c04825.jfif')}}" alt="logo">
+                    </div>
                     <form class="col-md-12 p-t-10" role="form" method="POST" action="{{ route('backpack.auth.login') }}">
                         {!! csrf_field() !!}
 
