@@ -37,6 +37,10 @@ class User extends Authenticatable
         'position',
         'department_id',
         'profile',
+        'address',
+        'active',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -65,5 +69,27 @@ class User extends Authenticatable
 
     public function getFullNameAttribute(){
         return $this->name.' '.$this->last_name;
+    }
+    public function getCityEnAttribute()
+    {
+        return $this->getAddress('city', 'en', $this->address);
+    }
+    public function getDistrictEnAttribute()
+    {
+        return $this->getAddress('district', 'en', $this->address);
+    }
+    public function getCommuneEnAttribute()
+    {
+        return $this->getAddress('commune', 'en', $this->address);
+    }
+    public function getVillageEnAttribute()
+    {
+        return $this->getAddress('village', 'en', $this->address);
+    }
+
+    public function toggleActive()
+    {
+        $this->active = !$this->active;
+        return $this;
     }
 }

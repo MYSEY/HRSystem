@@ -29,6 +29,7 @@ class DepartmentCrudController extends CrudController
         CRUD::setModel(\App\Models\Department::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/department');
         CRUD::setEntityNameStrings('department', 'departments');
+        $this->crud->orderBy('id');
     }
 
     /**

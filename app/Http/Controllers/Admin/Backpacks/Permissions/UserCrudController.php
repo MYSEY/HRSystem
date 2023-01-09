@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Backpacks\Permissions;
 
 use App\Models\Department;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Backpack\PermissionManager\app\Models\Role;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -27,28 +28,38 @@ class UserCrudController extends CrudController
     {
         $this->crud->disableResponsiveTable();
 
-        $this->crud->addFilter([
-            'name'  => 'role',
-            'type'  => 'dropdown',
-            'label' => 'Role'
-        ], 
-        function(){
-            return Role::pluck('name', 'id')->toArray();
-        }, 
-        function($value) { // if the filter is active
-            $this->crud->addClause('where', 'name', $value);
-        });
+        // Role Filter
+        $arr = config('permission.models.role')::all();
+        $roles = [];
+        foreach ($arr as $ar) {
+            $roles[$ar->id] = $ar->name;
+        }
+        $this->crud->addFilter(
+            [
+                'name'  => 'role',
+                'type'  => 'select2',
+                'label' => 'Roles',
+            ],
+            $roles,
+            function ($value) { // if the filter is active
+                $this->crud->addClause('whereHas', 'roles', function ($query) use ($value) {
+                    $query->where('role_id', '=', $value);
+                });
+            }
+        );
+
         $this->crud->addFilter([
             'name'  => 'department_id',
-            'type'  => 'dropdown',
+            'type'  => 'select2',
             'label' => 'Department'
         ], 
         function(){
             return Department::pluck('name', 'id')->toArray();
         }, 
         function($value) { // if the filter is active
-            $this->crud->addClause('where', 'name', $value);
+            $this->crud->addClause('where', 'department_id', $value);
         });
+
 
         $this->crud->addColumn([
             'name'      => 'row_number',
@@ -120,8 +131,14 @@ class UserCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'name'  => 'created_at',
-            'label' => 'Created',
+            'label' => 'Created At',
             'type'  => 'date',
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'active',
+            'label' => 'activate',
+            'type' => 'view',
+            'view' => 'columns.switch_button'
         ]);
     }
 
@@ -147,7 +164,6 @@ class UserCrudController extends CrudController
         $this->crud->setRequest($this->crud->validateRequest());
         $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
         $this->crud->unsetValidation(); // validation has already been run
-
         return $this->traitStore();
     }
 
@@ -161,7 +177,13 @@ class UserCrudController extends CrudController
         $this->crud->setRequest($this->crud->validateRequest());
         $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
         $this->crud->unsetValidation(); // validation has already been run
-
+        $this->crud->addField([
+            'name' => 'updated_by',
+            'type' => 'hidden'
+        ]);
+        request()->merge([
+            'updated_by' => Auth::id()
+        ]);
         return $this->traitUpdate();
     }
 
@@ -185,125 +207,149 @@ class UserCrudController extends CrudController
         return $request;
     }
 
+    public function fetchToggle()
+    {
+        $user = $this->crud->model->find(request()->id);
+        $user->toggleActive()->save();
+        return response()->json([
+            'message' => true
+        ]);
+    }
+
     protected function addUserFields()
     {
         $colMd6 = ['class' => 'form-group col-md-6 col-12' ]; 
         $tabOne = 'User Info';
         $tabTwo = 'User Roles';
+        $edit = $this->crud->actionIs('edit') ? "" : "";
+        $this->crud->addField([
+            'name'  => 'name',
+            'label' => 'First Name',
+            'type'  => 'text',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'last_name',
+            'label' => 'Last Name',
+            'type'  => 'text',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'date_of_birth',
+            'label' => 'Date Of Birth',
+            'type'  => 'date',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'    => 'identity_type',
+            'label'   => 'Identity Type',
+            'type'    => 'select2_from_array',
+            'options' => ['1' => 'ID Card', '2' => 'Passport','3'=>'Family Book'],
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'identity_number',
+            'label' => 'Identity Number',
+            'type'  => 'number',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'issue_date',
+            'label' => 'Issue Date',
+            'type'  => 'date',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'house_no',
+            'label' => 'House No',
+            'type'  => 'text',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'street_no',
+            'label' => 'Street No',
+            'type'  => 'text',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name' => 'address',
+            'label' => 'address',
+            'type' => 'flexiaddress',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'phone',
+            'label' => 'Phone',
+            'type'  => 'number',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'email',
+            'label' => 'Email',
+            'type'  => 'email',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'position',
+            'label' => 'Position',
+            'type'  => 'text',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'        => 'department_id',
+            'label'       => "Department",
+            'type'        => 'select2_from_array',
+            'options'     => Department::get()->pluck('name', 'id')->toArray(),
+            'allows_null' => false,
+            'default'     => 'one',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'password',
+            'label' => 'Password',
+            'type'  => 'password',
+            'value' => $edit,
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'password_confirmation',
+            'label' => 'Password Confirmation',
+            'type'  => 'password',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'label' => "Profile",
+            'name' => "profile",
+            'type' => 'image',
+            'crop' => true, // set to true to allow cropping, false to disable
+            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'disk'      => 's3_bucket', // in case you need to show images from a different disk
+            'prefix'    => 'images/users/', // in case your db value is only the file name (no path), you can use this to prepend your path to the image src (in HTML), before it's shown to the user;
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
 
+        $this->crud->addField([
+            'name' => 'created_by',
+            'type' => 'hidden',
+            'default' => Auth::id()
+        ]);
         $this->crud->addFields([
-            [
-                'name'  => 'name',
-                'label' => 'First Name',
-                'type'  => 'text',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'last_name',
-                'label' => 'Last Name',
-                'type'  => 'text',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'date_of_birth',
-                'label' => 'Date Of Birth',
-                'type'  => 'date',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'identity_type',
-                'label' => 'Identity Type',
-                'type'  => 'text',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'identity_number',
-                'label' => 'Identity Number',
-                'type'  => 'number',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'issue_date',
-                'label' => 'Issue Date',
-                'type'  => 'date',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'house_no',
-                'label' => 'House No',
-                'type'  => 'text',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'street_no',
-                'label' => 'Street No',
-                'type'  => 'text',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'phone',
-                'label' => 'Phone',
-                'type'  => 'number',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'email',
-                'label' => 'Email',
-                'type'  => 'email',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'position',
-                'label' => 'Position',
-                'type'  => 'text',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'        => 'department_id',
-                'label'       => "Department",
-                'type'        => 'select2_from_array',
-                'options'     => Department::get()->pluck('name', 'id')->toArray(),
-                'allows_null' => false,
-                'default'     => 'one',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'password',
-                'label' => 'Password',
-                'type'  => 'password',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'name'  => 'password_confirmation',
-                'label' => 'Password Confirmation',
-                'type'  => 'password',
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
-            [
-                'label' => "Profile",
-                'name' => "profile",
-                'type' => 'image',
-                'crop' => true, // set to true to allow cropping, false to disable
-                'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
-                'disk'      => 's3_bucket', // in case you need to show images from a different disk
-                'prefix'    => 'images/users/', // in case your db value is only the file name (no path), you can use this to prepend your path to the image src (in HTML), before it's shown to the user;
-                'wrapperAttributes' => $colMd6,
-                'tab'   =>  $tabOne
-            ],
             [
                 // two interconnected entities
                 'label'             => trans('backpack::permissionmanager.user_role_permission'),

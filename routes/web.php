@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\AddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +20,9 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::get('/', function () {
     return redirect('/admin');
+});
+
+Route::group(['middleware' => ['web',config('backpack.base.middleware_key', 'admin')
+], 'namespace'  => 'admin'], function () {
+    Route::get('address', [AddressController::class,'index'])->name('address');
 });

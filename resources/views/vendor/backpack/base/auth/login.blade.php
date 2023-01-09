@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <img class="card-img-top" style="width:60%" src="{{asset('images/logo/06b123ef-639d-4c51-b6f8-7c3923c04825.jfif')}}" alt="logo">
+                        <img class="card-img-top" style="width:60%" src="{{asset('images/logo/aa15d5f1-6051-4731-85c3-9f8e7dbc4b88.jfif')}}" alt="logo">
                     </div>
                     <form class="col-md-12 p-t-10" role="form" method="POST" action="{{ route('backpack.auth.login') }}">
                         {!! csrf_field() !!}
