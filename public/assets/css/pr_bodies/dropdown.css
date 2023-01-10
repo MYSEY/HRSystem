@@ -1,0 +1,25 @@
+.dropdown-tab {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content-tab {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    margin-top: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+  
+  .dropdown-content-tab span {
+    color: black;
+    padding: 2px 10px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-tab span:hover {background-color: #ddd;}
+  
+  .show {display: block;}

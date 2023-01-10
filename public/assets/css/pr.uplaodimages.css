@@ -1,0 +1,110 @@
+/* ========================================
+   pr.uplaodimages v1.0.0
+   http://www.format.it/
+
+   ======================================== */
+
+/* #region Tooltip (Green color) */
+
+.tooltip-inner {
+  background-color: white;
+  color: #339933;
+  border: 1px solid;
+}
+
+.tooltip.bs-tooltip-auto[x-placement=top] .arrow::before,
+.tooltip.bs-tooltip-top .arrow::before {
+  border-top-color: #339933;
+}
+
+.tooltip.bs-tooltip-auto[x-placement=bottom] .arrow::before,
+.tooltip.bs-tooltip-bottom .arrow::before {
+  border-bottom-color: #339933;
+}
+
+.tooltip.bs-tooltip-auto[x-placement=right] .arrow::before,
+.tooltip.bs-tooltip-right .arrow::before {
+  border-right-color: #339933;
+}
+
+.tooltip.bs-tooltip-auto[x-placement=left] .arrow::before,
+.tooltip.bs-tooltip-left .arrow::before {
+  border-left-color: #339933;
+}
+
+/* Overide btn */
+.self-btn-sm {
+  padding: 4px 6px;
+  font-size: 11pt;
+}
+
+.self-btn-outline-secondary {
+  border-color: #d3d3d3;
+}
+
+/* #region Ratio images */
+.ratio-box {
+  position: relative;
+  height: 0;
+  width: 200px;
+  padding-top: 100%;
+  /*Ratio*/
+}
+
+.ratio-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-ratio-box {
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.img-loading {
+  position: absolute;
+  top: calc(50% - 1.5rem);
+  width: 100%;
+  height: 100%;
+}
+
+/*#endregion*/
+
+/* #region Border */
+.border.dashed {
+  border-style: dashed !important;
+}
+
+.image {
+  border-width: 2px !important;
+  border-radius: 10px !important;
+  border-color: #d3d3d3 !important;
+}
+
+/*#endregion*/
+
+/* #region Main */
+.main-tag {
+  position: absolute;
+  opacity: 0.8;
+  left: calc(25%);
+  top: calc(75%);
+}
+
+.modify-image {
+  position: absolute;
+  opacity: 0.8;
+  left: calc(76%);
+  top: calc(7%);
+}
+
+/*#endregion*/
+
+.progress {
+  font-size: 1rem;
+}

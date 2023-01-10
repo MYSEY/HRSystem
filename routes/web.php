@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\AddressController;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,5 +24,16 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['web',config('backpack.base.middleware_key', 'admin')
 ], 'namespace'  => 'admin'], function () {
-    Route::get('address', [AddressController::class,'index'])->name('address');
+    Route::get('address', [AddressController::class,'index'])->name('address.index');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| SWITCH LANGUAGE
+|--------------------------------------------------------------------------
+*/
+Route::get('lang/{locale}', function ($locale) {
+    Session::put('locale', $locale);
+    return redirect()->back();
 });

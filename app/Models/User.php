@@ -86,7 +86,6 @@ class User extends Authenticatable
     {
         return $this->getAddress('village', 'en', $this->address);
     }
-
     public function toggleActive()
     {
         $this->active = !$this->active;

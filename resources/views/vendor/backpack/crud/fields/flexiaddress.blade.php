@@ -8,13 +8,13 @@
         <div class="col-sm-6 col-md-6 mb-3">
             <label>Province/City</label>
             <select class="form-control" @change="cityChange" v-model="frm.city" :disabled="JSON.stringify(cities).length==2">
-                <option v-for="(item, text) in cities" :value="item">@{{text.name}}</option>
+                <option v-for="(item, text) in cities" :value="item">@{{text}}</option>
             </select>
         </div>
         <div class="col-sm-6 col-md-6">
             <label>District/Khan</label>
             <select class="form-control" @change="districChange"  v-model="frm.distric" :disabled="JSON.stringify(districs).length==2">
-                <option v-for="(item, text) in districs" :value="item">@{{text.name}}</option>
+                <option v-for="(item, text) in districs" :value="item">@{{text}}</option>
             </select>
         </div>
         <div class="col-sm-6 col-md-6">
@@ -95,11 +95,11 @@
             },
             getData:function(code=''){
                 if(code){ 
-                    return axios.get('{{route("address")}}?code='+code)
+                    return axios.get('{{route("address.index")}}?code='+code)
                 }
                 else
                 { 
-                    return axios.get('{{route("address")}}')
+                    return axios.get('{{route("address.index")}}')
                 }
             }
         },

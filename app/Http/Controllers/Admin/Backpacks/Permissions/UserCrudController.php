@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin\Backpacks\Permissions;
 
 use App\Models\Department;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdated;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Backpack\PermissionManager\app\Models\Role;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-use Backpack\PermissionManager\app\Http\Requests\UserUpdateCrudRequest as UpdateRequest;
 
 class UserCrudController extends CrudController
 {
@@ -16,6 +16,8 @@ class UserCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
+
 
     public function setup()
     {
@@ -79,7 +81,7 @@ class UserCrudController extends CrudController
         ]);
         $this->crud->addColumn([
             'name' => 'FullName',
-            'label' => 'Name',
+            'label' => __('lang.name'),
             'attribute' => 'name',
             'type' => 'text',
             'searchLogic' => function ($query, $column, $searchTerm) {
@@ -151,7 +153,7 @@ class UserCrudController extends CrudController
     public function setupUpdateOperation()
     {
         $this->addUserFields();
-        $this->crud->setValidation(UpdateRequest::class);
+        $this->crud->setValidation(UserUpdated::class);
     }
 
     /**
@@ -237,6 +239,20 @@ class UserCrudController extends CrudController
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
+            'name'  => 'phone',
+            'label' => 'Phone',
+            'type'  => 'phone',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'email',
+            'label' => 'Email',
+            'type'  => 'email',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
             'name'  => 'date_of_birth',
             'label' => 'Date Of Birth',
             'type'  => 'date',
@@ -283,20 +299,6 @@ class UserCrudController extends CrudController
             'name' => 'address',
             'label' => 'address',
             'type' => 'flexiaddress',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'phone',
-            'label' => 'Phone',
-            'type'  => 'number',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'email',
-            'label' => 'Email',
-            'type'  => 'email',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);

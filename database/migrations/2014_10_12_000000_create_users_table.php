@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             $table->integer('department_id')->nullable();
             $table->string('address')->nullable();
             $table->string('password');
-            $table->boolean('active')->nullable();
+            $table->boolean('active')->default(1);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->rememberToken();
