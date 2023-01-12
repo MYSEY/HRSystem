@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Backpacks\Permissions;
 
+use App\Helpers\Helper;
 use App\Models\Department;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdated;
@@ -72,15 +73,25 @@ class UserCrudController extends CrudController
             'orderable' => false,
         ])->makeFirstColumn();
         
+        // $this->crud->addColumn([
+        //     'name'  => 'profile',
+        //     'label' => 'Profile',
+        //     'type'     => 'image',
+        //     'prefix' => 'images/users/',
+        // ]);
         $this->crud->addColumn([
             'name'  => 'profile',
-            'label' => 'Profile',
-            'type'     => 'image',
-            'prefix' => 'images/users/',
-            // 'function' => function () {
-            //     return '<img class="example-image" src="{{asset("images/users/default-user-icon.png")}}" alt="" width="35" style="cursor:pointer"/>';
-            // }
+            'label' => 'profile',
+            'type'     => 'closure',
+            'function' => function ($entry) {
+                if (Helper::isUrl($entry->profile)) {
+                    return '<a class="example-image-link" href="' . $entry->profile . '" data-lightbox="lightbox-' . $entry->id . '"><img class="example-image" src="' . $entry->profile .'" alt="" width="35" style="cursor:pointer"/></a>';
+                } else {
+                    return '<a class="example-image-link" href="' . $entry->MediumProfile . '" data-lightbox="lightbox-' . $entry->id . '"><img class="example-image" src="' . $entry->MediumProfile .'" alt="" width="35" style="cursor:pointer"/></a>';
+                }
+            }
         ]);
+        
         $this->crud->addColumn([
             'name' => 'FullName',
             'label' => __('lang.name'),
@@ -355,16 +366,17 @@ class UserCrudController extends CrudController
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
+
         $this->crud->addField([
-            'label' => "Profile",
+            'label' => 'Profile',
             'name' => "profile",
             'type' => 'image',
-            'crop' => true, // set to true to allow cropping, false to disable
-            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
-            'disk'      => 's3_bucket', // in case you need to show images from a different disk
-            'prefix'    => 'images/users/', // in case your db value is only the file name (no path), you can use this to prepend your path to the image src (in HTML), before it's shown to the user;
+            'upload' => true,
+            'crop' => true,
+            'aspect_ratio' => 0,
+            'default' => config('const.filePath.default_user'),
+            'tab'   =>  $tabOne,
             'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
         ]);
 
         $this->crud->addField([
