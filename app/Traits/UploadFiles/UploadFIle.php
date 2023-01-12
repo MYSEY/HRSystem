@@ -85,12 +85,11 @@ trait UploadFIle
     public function base64Upload($value, $thumbnail = true, $mainImage = true)
     {
         $filename = '';
-        if (starts_with($value, $this->isBase64)) {
+        if (str_starts_with($value, $this->isBase64)) {
             $image = Image::make($value);
             $filename = md5($value . time()) . '.jpg';
             if ($mainImage) {
-                Storage::disk($this->funcGlobal()['upload_disk'])
-                    ->put($this->funcGlobal()['original_path'] . $filename, $image->stream());
+                Storage::disk($this->funcGlobal()['upload_disk'])->put($this->funcGlobal()['original_path'] . $filename, $image->stream());
             }
             if ($thumbnail) {
                 self::createThumbnail($image, $filename);
@@ -107,7 +106,7 @@ trait UploadFIle
     {
         $self = new static;
         // decode string to file system
-        if (starts_with($base64Image, $self->isBase64)) :
+        if (str_starts_with($base64Image, $self->isBase64)) :
             @list($type, $fileData) = explode(';', $base64Image);
             @list(, $fileData) = explode(',', $fileData);
             $base64File = base64_decode($fileData);
@@ -139,12 +138,11 @@ trait UploadFIle
         $filenames = [];
         if (!empty($values) && is_array($values)) {
             foreach ($values as $value) {
-                if (starts_with($value, $this->isBase64)) {
+                if (str_starts_with($value, $this->isBase64)) {
                     $image = Image::make($value);
                     $filename = md5($value . time()) . '.jpg';
                     if ($mainImage) {
-                        Storage::disk($this->funcGlobal()['upload_disk'])
-                            ->put($this->funcGlobal()['original_path'] . $filename, $image->stream());
+                        Storage::disk($this->funcGlobal()['upload_disk'])->put($this->funcGlobal()['original_path'] . $filename, $image->stream());
                     }
                     if ($thumbnail) {
                         self::createThumbnail($image, $filename);

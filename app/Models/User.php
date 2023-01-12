@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helpers\Helper;
 use App\Models\Department;
+use Illuminate\Support\Str;
 use App\Traits\AddressTrait;
 use Laravel\Sanctum\HasApiTokens;
 use App\Traits\UploadFiles\UploadFIle;
@@ -84,8 +85,33 @@ class User extends Authenticatable
 
     public function getMediumProfileAttribute()
     {
-        return Helper::isUrl($this->profile) ?
-        $this->profile : asset($this->getUploadImage($this->profile, 'medium', 'default_user'));
+        return Helper::isUrl($this->profile) ? $this->profile : asset($this->getUploadImage($this->profile, 'medium', 'default_user'));
+    }
+
+    public function getProfileAttribute($value)
+    {
+        return Helper::isUrl($value) ? $value : asset($this->getUploadImage($value, 'original', 'default_user'));
+    }
+
+    public function setProfileAttribute($value)
+    {
+        if (!empty(request()->profile)) {
+            if (Str::startsWith($value, 'data:image')) {
+                $this->attributes['profile'] = $this->base64Upload($value);
+                // DELETE OLD PROFILE
+                $this->deleteFiel($this->getOriginal('profile'));
+            } else {
+                if (request()->hasFile('profile')) {
+                    $this->attributes['profile'] = $this->singleUpload('profile', request());
+                    // DELETE OLD PROFILE
+                    $this->deleteFiel($this->getOriginal('profile'));
+                }
+            }
+        } elseif (Helper::isUrl($value)) {
+            $this->attributes['profile'] = $value;
+        } else {
+            $this->attributes['profile'] = $this->base64Upload($value);
+        }
     }
 
     /////////////////////////////
