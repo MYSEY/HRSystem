@@ -30,7 +30,7 @@ return [
         'small' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/uploads/files/small/',
         'medium' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/uploads/files/medium/',
         'large' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/uploads/files/large/',
-        'original' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/uploads/files/original/'
+        'original' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/storage/uploads/files/original/'
     ],
     'phone_lib' => [
         'intl_tel_input_regex' => '/^[+]([\/+0-9])+$/',
