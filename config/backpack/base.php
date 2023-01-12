@@ -93,7 +93,7 @@ return [
     'content_class' => 'content-scroll',
 
     // Sidebar element classes.
-    'sidebar_class' => 'sidebar',
+    'sidebar_class' => 'sidebar sidebar-links bg-white nav-scoll',
     // 'sidebar_class' => 'sidebar sidebar-pills bg-light',
     // Remove "sidebar-transparent" for standard sidebar look
     // Try "sidebar-light" or "sidebar-dark" for dark/light links

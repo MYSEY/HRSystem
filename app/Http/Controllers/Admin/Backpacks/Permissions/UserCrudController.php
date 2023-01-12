@@ -17,6 +17,8 @@ class UserCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+
 
 
     public function setup()
@@ -136,6 +138,16 @@ class UserCrudController extends CrudController
             'label' => 'Created At',
             'type'  => 'date',
         ]);
+        $this->crud->addColumn(
+            [
+                'label' => 'Created By',
+                'name'  => 'created_by',
+                'type'     => 'closure',
+                'function' => function ($entry) {
+                    return optional($entry->createdBy)->FullName;
+                }
+            ],
+        );
         $this->crud->addColumn([
             'name'  => 'active',
             'label' => 'activate',
@@ -189,6 +201,15 @@ class UserCrudController extends CrudController
         return $this->traitUpdate();
     }
 
+    public function show($id)
+    {
+        // get the info for that entry
+        $this->data['entry'] = $this->crud->getEntry($id);
+        $this->data['crud'] = $this->crud;
+        $this->data['title'] = trans('backpack::crud.preview') . ' ' . $this->crud->entity_name;
+
+        return view('backpack.user.show', $this->data);
+    }
     /**
      * Handle password input fields.
      */

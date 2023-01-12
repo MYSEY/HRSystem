@@ -8,25 +8,25 @@
         <div class="col-sm-6 col-md-6 mb-3">
             <label>Province/City</label>
             <select class="form-control" @change="cityChange" v-model="frm.city" :disabled="JSON.stringify(cities).length==2">
-                <option v-for="(item, text) in cities" :value="item">@{{text}}</option>
+                <option v-for="(item, text) in cities" :value="text">@{{item}}</option>
             </select>
         </div>
         <div class="col-sm-6 col-md-6">
             <label>District/Khan</label>
-            <select class="form-control" @change="districChange"  v-model="frm.distric" :disabled="JSON.stringify(districs).length==2">
-                <option v-for="(item, text) in districs" :value="item">@{{text}}</option>
+            <select class="form-control" @change="districChange" v-model="frm.distric" :disabled="JSON.stringify(districs).length==2">
+                <option v-for="(item, text) in districs" :value="text">@{{item}}</option>
             </select>
         </div>
         <div class="col-sm-6 col-md-6">
             <label class="no-error-label">Commune/Sangkat</label>
-            <select class="form-control no-error-border" @change="communeChange"  v-model="frm.commune" :disabled="JSON.stringify(communes).length==2">
-                <option v-for="(item, text) in communes" :value="item">@{{text.name}}</option>
+            <select class="form-control no-error-border" @change="communeChange" v-model="frm.commune" :disabled="JSON.stringify(communes).length==2">
+                <option v-for="(item, text) in communes" :value="text">@{{item}}</option>
             </select>
         </div>
         <div class="col-sm-6 col-md-6">
             <label class="no-error-label">Village</label>
             <select class="form-control no-error-border" @change="villageChange" v-model="frm.village" :disabled="JSON.stringify(villages).length==2">
-                <option v-for="(item, text) in villages" :value="item">@{{text.name}}</option>
+                <option v-for="(item, text) in villages" :value="text">@{{item}}</option>
             </select>
         </div>  
         <input type="hidden" v-model="hidden" name="{{ $field['name'] }}">
@@ -92,6 +92,7 @@
             },
             villageChange:function(){
                 this.hidden = this.frm.village;
+                console.log(this.hidden);
             },
             getData:function(code=''){
                 if(code){ 
