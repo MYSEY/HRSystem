@@ -54,6 +54,18 @@ return [
         'packages/source-sans-pro/source-sans-pro.css',
         'packages/line-awesome/css/line-awesome.min.css',
 
+        // 'css/lightbox.min.css',
+        // 'css/app.css',
+        'css/custom.css',
+        // 'assets/css/pr-filters.css',
+        // 'assets/css/pr_bodies/dropdown.css',
+        // 'assets/css/pr_bodies/tabs.css',
+        // 'packages/select2/dist/css/select2.min.css',
+        // '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+        // 'packages/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css',
+        // '//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css',
+        // 'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css'
+        
         // Example (the fonts above, loaded from CDN instead)
         // 'https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css',
         // 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic',

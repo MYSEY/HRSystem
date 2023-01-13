@@ -72,13 +72,7 @@ class UserCrudController extends CrudController
             'label'     => '#',
             'orderable' => false,
         ])->makeFirstColumn();
-        
-        // $this->crud->addColumn([
-        //     'name'  => 'profile',
-        //     'label' => 'Profile',
-        //     'type'     => 'image',
-        //     'prefix' => 'images/users/',
-        // ]);
+      
         $this->crud->addColumn([
             'name'  => 'profile',
             'label' => 'profile',
