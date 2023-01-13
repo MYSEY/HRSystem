@@ -98,12 +98,10 @@ class User extends Authenticatable
         if (!empty(request()->profile)) {
             if (Str::startsWith($value, 'data:image')) {
                 $this->attributes['profile'] = $this->base64Upload($value);
-                // DELETE OLD PROFILE
                 $this->deleteFiel($this->getOriginal('profile'));
             } else {
                 if (request()->hasFile('profile')) {
                     $this->attributes['profile'] = $this->singleUpload('profile', request());
-                    // DELETE OLD PROFILE
                     $this->deleteFiel($this->getOriginal('profile'));
                 }
             }
@@ -114,9 +112,7 @@ class User extends Authenticatable
         }
     }
 
-    /////////////////////////////
     //// GET EN ADRESS
-    /////////////////////////////
     public function getCityEnAttribute()
     {
         return $this->getAddress('city', 'en', $this->address);
@@ -146,9 +142,7 @@ class User extends Authenticatable
     }
 
 
-    ///////////////////////////////////
     // GET KH ADDRESS
-    ///////////////////////////////////
     public function getCityKhAttribute()
     {
         return $this->getAddress('city', 'kh', $this->address);

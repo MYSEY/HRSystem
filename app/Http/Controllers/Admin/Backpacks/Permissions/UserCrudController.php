@@ -94,7 +94,7 @@ class UserCrudController extends CrudController
         
         $this->crud->addColumn([
             'name' => 'FullName',
-            'label' => __('lang.name'),
+            'label' => 'Name',
             'attribute' => 'name',
             'type' => 'text',
             'searchLogic' => function ($query, $column, $searchTerm) {
