@@ -25,13 +25,13 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'employee_name_kh' => 'required|min:5|max:255',
-            'employee_name_en' => 'required|min:5|max:255',
+            'employee_name_kh' => 'required|max:255',
+            'employee_name_en' => 'required|max:255',
             'date_of_birth' => 'required',
             'branch_id' => 'required|integer',
             'position' => 'required',
             'department_id' => 'required|integer',
-            'personal_phone_number' => 'required|integer',
+            'personal_phone_number' => 'required|string',
             'current_addtress'       => 'sometimes|nullable|numeric',
             'email'          => 'sometimes|nullable|email',
         ];

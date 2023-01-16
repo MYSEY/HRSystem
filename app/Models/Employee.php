@@ -71,6 +71,9 @@ class Employee extends Model
     public function getFullNameAttribute(){
         return $this->name.' '.$this->last_name;
     }
+    public function getBranchNamenKhmerAttribute(){
+        return $this->branch_name_kh;
+    }
 
     public function getMediumProfileAttribute()
     {

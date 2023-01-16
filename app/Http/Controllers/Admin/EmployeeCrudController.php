@@ -105,8 +105,18 @@ class EmployeeCrudController extends CrudController
         
         $this->crud->addColumn([
             'name'  => 'branch_id',
-            'type'  => 'number',
-            'label' => 'Branch'
+            'label' => 'Branch',
+            'type'  => 'closure',
+            'attribute' => 'branch_name_kh',
+            'function' => function ($entry) {
+                return optional($entry->branch)->branch_name_kh;
+            },
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhereHas('branch', function ($q) use ($column, $searchTerm) {
+                    $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
+                        ->orWhere('branch_name_kh', 'like', '%' . $searchTerm . '%');
+                });
+            }
         ]);
         $this->crud->addColumn([
             'name'  => 'email',
@@ -135,17 +145,18 @@ class EmployeeCrudController extends CrudController
                 'label' => 'Created By',
                 'name'  => 'created_by',
                 'type'     => 'closure',
+                'attribute' => 'name',
                 'function' => function ($entry) {
                     return optional($entry->createdBy)->FullName;
+                },
+                'searchLogic' => function ($query, $column, $searchTerm) {
+                    $query->orWhereHas('createdBy', function ($q) use ($column, $searchTerm) {
+                        $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
+                            ->orWhere('name', 'like', '%' . $searchTerm . '%');
+                    });
                 }
             ],
         );
-        $this->crud->addColumn([
-            'name'  => 'active',
-            'label' => 'activate',
-            'type' => 'view',
-            'view' => 'columns.switch_button'
-        ]);
     }
 
 
@@ -295,21 +306,21 @@ class EmployeeCrudController extends CrudController
         $this->crud->addField([
             'name'  => 'personal_phone_number',
             'label' => 'Personal Phone',
-            'type'  => 'text',
+            'type'  => 'phone',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
             'name'  => 'company_phone_number',
             'label' => 'Company Phone',
-            'type'  => 'text',
+            'type'  => 'phone',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
             'name'  => 'agency_phone_number',
             'label' => 'Agency Phone',
-            'type'  => 'text',
+            'type'  => 'phone',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);

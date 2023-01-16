@@ -32,7 +32,7 @@ class CreateEmployeesTable extends Migration
             $table->string('position');
             $table->date('date_of_commencement')->nullable();
             $table->string('email');
-            $table->longText('profile');
+            $table->longText('profile')->nullable();
             $table->string('certificate')->nullable();
             $table->string('identity_type')->nullable();
             $table->integer('identity_number')->nullable();

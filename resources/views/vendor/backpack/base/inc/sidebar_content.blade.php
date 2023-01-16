@@ -2,12 +2,12 @@
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 
 <li class="nav-item nav-dropdown">
-    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Employees</a>
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Employee</a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('employee') }}"><i class="nav-icon la la-user"></i> <span>Employees List</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('employee') }}"><i class="nav-icon la la-user"></i> <span>Employee Lists</span></a></li>
     </ul>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('employee/create') }}"><i class="nav-icon la la-user"></i> <span>Add     Employees</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('employee/create') }}"><i class="nav-icon la la-user"></i> <span>New Employee</span></a></li>
     </ul>
 </li>
 
@@ -24,4 +24,11 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('permission') }}"><i class="nav-icon la la-key"></i> <span>Permissions</span></a></li>
     </ul>
 </li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('branchs') }}'><i class='nav-icon la la-question'></i> Branchs</a></li>
+
+
+<li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Settings</a>
+    <ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('branchs') }}'><i class='nav-icon la la-question'></i> Branchs</a></li>
+    </ul>
+</li>
