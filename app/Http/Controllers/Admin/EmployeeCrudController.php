@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helper;
 use App\Models\Branchs;
+use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
@@ -47,6 +48,42 @@ class EmployeeCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->disableResponsiveTable();
+
+        $this->crud->addFilter([
+            'name'  => 'employee_name_en',
+            'type'  => 'select2',
+            'label' => 'Employee Name'
+        ], 
+        function(){
+            return Employee::pluck('employee_name_en', 'employee_name_en')->toArray();
+        }, 
+        function($value) { // if the filter is active
+            $this->crud->addClause('where', 'employee_name_en', $value);
+        });
+
+        $this->crud->addFilter([
+            'name'  => 'department_id',
+            'type'  => 'select2',
+            'label' => 'Department'
+        ], 
+        function(){
+            return Department::pluck('name', 'id')->toArray();
+        }, 
+        function($value) { // if the filter is active
+            $this->crud->addClause('where', 'department_id', $value);
+        });
+
+        $this->crud->addFilter([
+            'name'  => 'position',
+            'type'  => 'select2',
+            'label' => 'Position'
+        ],
+        function(){
+            return Employee::pluck('position', 'position')->toArray();
+        }, 
+        function($value) { // if the filter is active
+            $this->crud->addClause('where', 'position', $value);
+        });
 
         $this->crud->addColumn([
             'name'      => 'row_number',
