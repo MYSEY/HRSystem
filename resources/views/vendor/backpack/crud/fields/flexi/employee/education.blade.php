@@ -95,7 +95,7 @@
                                 $degree = \App\Models\Option::find(Session::get('degree')[$key] ?? '');
                             ?>
                             @if(!empty($degree))
-                                <option value="{{ $degree->id }}" selected>{{ $degree->display }}</option>
+                                <option value="{{ $degree->id }}" selected>{{ $degree->name_khmer }}</option>
                             @endif
                         </select>
                     </div>
@@ -107,7 +107,7 @@
                                 $fieldOfStudy = \App\Models\Option::find(Session::get('field_of_study')[$key] ?? '');
                             ?>
                             @if(!empty($fieldOfStudy))
-                                <option value="{{ $fieldOfStudy->id }}" selected>{{ $fieldOfStudy->display }}</option>
+                                <option value="{{ $fieldOfStudy->id }}" selected>{{ $fieldOfStudy->name_khmer }}</option>
                             @endif
                         </select>
                     </div>
@@ -140,17 +140,12 @@
                     <label>Degree</label>
                     <select name="degree[]" class="form-control degree">
                         <option value="" disabled selected>select degree</option>
-                        <option value="1">Master Degree</option>
-                        <option value="2">Bachelor's degree</option>
                     </select>
                 </div>
                 <div class="col-sm-6 col-md-6 mb-3">
                     <label>Field Of Study</label>
                     <select name="field_of_study[]" class="form-control field-of-study">
                         <option value="" disabled selected>select field of study</option>
-                        
-                        <option value="1">Economics and Management</option>
-                        <option value="2">Business Analytics</option>
                     </select>
                 </div>
                 <div class="form-group col-md-6 col-12">    
@@ -203,7 +198,7 @@
         <script>
             $(function(){
                 var fetchDegree = function(){
-                    axios.get('{{ URL("admin/fetch-education-option") }}', {
+                    axios.get('{{ URL("education") }}', {
                         params: { 
                             degree : 'degree'
                         }
@@ -212,7 +207,7 @@
                         $('.degree').each(function(index){
                             $.each(object, function(ind, row){
                                 if ($('.degree:eq('+index+') option[value="'+row.id+'"]').length == 0 ){
-                                    var option = '<option value="'+row.id+'">'+row.display+'</option>';
+                                    var option = '<option value="'+row.id+'">'+row.name_khmer+'</option>';
                                     $('.degree').eq(index).append(option);
                                 }
                             });
@@ -220,7 +215,7 @@
                     })
                 };
                 var fetchFieldOfStudy = function(){
-                    axios.get('{{ URL("admin/fetch-education-option") }}', {
+                    axios.get('{{ URL("education") }}', {
                         params: { 
                             field_of_study : 'field_of_study'
                         }
@@ -229,7 +224,7 @@
                         $('.field-of-study').each(function(index){
                             $.each(object, function(ind, row){
                                 if ($('.field-of-study:eq('+index+') option[value="'+row.id+'"]').length == 0 ){
-                                    var option = '<option value="'+row.id+'">'+row.display+'</option>';
+                                    var option = '<option value="'+row.id+'">'+row.name_khmer+'</option>';
                                     $('.field-of-study').eq(index).append(option);
                                 }
                             });

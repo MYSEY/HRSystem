@@ -25,7 +25,9 @@ class OptionRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name_khmer' => 'required|max:255',
+            'name_english' => 'required|max:255',
+            'type' => 'required|max:255',
         ];
     }
 

@@ -3,22 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\HolidayRequest;
+use App\Http\Requests\PositionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class HolidayCrudController
+ * Class PositionCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class HolidayCrudController extends CrudController
+class PositionCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    // use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -27,9 +27,9 @@ class HolidayCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Holiday::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/holiday');
-        CRUD::setEntityNameStrings('holiday', 'holidays');
+        CRUD::setModel(\App\Models\Position::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/position');
+        CRUD::setEntityNameStrings('position', 'positions');
     }
 
     /**
@@ -40,7 +40,6 @@ class HolidayCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        
         $this->crud->addColumn([
             'name'      => 'row_number',
             'type'      => 'row_number',
@@ -49,20 +48,14 @@ class HolidayCrudController extends CrudController
         ])->makeFirstColumn();
 
         $this->crud->addColumn([
-            'name'  => 'title',
+            'name'  => 'name_khmer',
             'type'  => 'text',
-            'label' => 'Title'
+            'label' => 'Name Khmer'
         ]);
         $this->crud->addColumn([
-            'name'  => 'month',
-            'type'  => 'date',
-            'label' => 'Month'
-        ]);
-        
-        $this->crud->addColumn([
-            'name'  => 'created_at',
-            'type'  => 'date',
-            'label' => 'Created At'
+            'name'  => 'name_english',
+            'type'  => 'text',
+            'label' => 'Name English'
         ]);
         $this->crud->addColumn(
             [
@@ -98,6 +91,12 @@ class HolidayCrudController extends CrudController
                 }
             ],
         );
+        
+        $this->crud->addColumn([
+            'name'  => 'created_at',
+            'type'  => 'date',
+            'label' => 'Created At'
+        ]);
     }
 
     /**
@@ -108,18 +107,19 @@ class HolidayCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(HolidayRequest::class);
+        $this->crud->setValidation(PositionRequest::class);
 
-        CRUD::field('title');
-        CRUD::field('month');
+        $this->crud->addField([
+            'name'  => 'name_khmer',
+            'type'  => 'text',
+            'label' => 'Name Khmer'
+        ]);
+        $this->crud->addField([
+            'name'  => 'name_english',
+            'type'  => 'text',
+            'label' => 'Name English'
+        ]);
     }
-
-    /**
-     * Define what happens when the Update operation is loaded.
-     * 
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
 
 
     public function store()
@@ -144,6 +144,12 @@ class HolidayCrudController extends CrudController
         ]);
         return $this->traitUpdate();
     }
+    /**
+     * Define what happens when the Update operation is loaded.
+     * 
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();

@@ -232,8 +232,6 @@ class EmployeeCrudController extends CrudController
         return $this->traitStore();
     }
 
-
-
     public function update($id)
     {
         $this->crud->addField([
@@ -348,7 +346,7 @@ class EmployeeCrudController extends CrudController
         $this->crud->addField([
             'name'  => 'level',
             'label' => 'Level',
-            'type'  => 'text',
+            'type'  => 'number',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -358,6 +356,33 @@ class EmployeeCrudController extends CrudController
             'type'  => 'date',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
+        ]);
+    
+        $this->crud->addField([
+            'name'  => 'fixed_dura_con_type',
+            'label' => 'Duration Type',
+            'type'        => 'select2_from_array',
+            'options'     => ['1' => 'FDC', '2' => 'UDC'],
+            'allows_null' => false,
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+
+        $this->crud->addField([
+            'label' => 'Guarantee Letter',
+            'type' => "upload",
+            'name' => 'guarantee_letter',
+            'upload' => true,
+            'tab' => $tabOne,
+            'wrapperAttributes' => $colMd6,
+        ]);
+        $this->crud->addField([
+            'label' => 'Employment Book',
+            'type' => "upload",
+            'name' => 'employment_book',
+            'upload' => true,
+            'tab' => $tabOne,
+            'wrapperAttributes' => $colMd6,
         ]);
 
         // Contact Info
@@ -523,60 +548,6 @@ class EmployeeCrudController extends CrudController
             'type'  => 'text',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
-        ]);
-
-        // Social Links
-        $this->crud->addField([
-            'name' => 'Social Links',
-            'type' => 'custom_html',
-            'value' => $this->startLabel .'Social Links'. $this->endLabel,
-            'tab' => $tabOne,
-            'wrapperAttributes' => $colMd12,
-        ]);
-        $this->crud->addField([
-            'name'  => 'website',
-            'type'  => 'text',
-            'label' => 'Website',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'facebook',
-            'type'  => 'text',
-            'label' => 'Facebook',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'linkedin',
-            'type'  => 'text',
-            'label' => 'Linked In',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'twitter',
-            'type'  => 'text',
-            'label' => 'Twitter',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-
-        // Social Links
-        $this->crud->addField([
-            'name' => 'Certificate',
-            'type' => 'custom_html',
-            'value' => $this->startLabel .'Certificate'. $this->endLabel,
-            'tab' => $tabOne,
-            'wrapperAttributes' => $colMd12,
-        ]);
-        $this->crud->addField([
-            'label' => '',
-            'type' => "upload",
-            'name' => 'certificate',
-            'upload' => true,
-            'tab' => $tabOne,
-            'wrapperAttributes' => ['class' => 'form-group col-lg-6'],
         ]);
 
         // Profile

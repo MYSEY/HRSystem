@@ -31,9 +31,11 @@ class EmployeeRequest extends FormRequest
             'branch_id' => 'required|integer',
             'position' => 'required',
             'department_id' => 'required|integer',
-            'personal_phone_number' => 'sometimes|nullable|regex:/^[+-]?\d+$/|min:9|max:15',
+            'personal_phone_number' => 'required|min:9|max:15',
+            'company_phone_number' => 'required|min:9|max:15',
+            'agency_phone_number' => 'required|min:9|max:15',
             'current_addtress'       => 'sometimes|nullable|numeric',
-            'email'          => 'sometimes|nullable|email',
+            'email'          => 'required|email',
         ];
     }
 

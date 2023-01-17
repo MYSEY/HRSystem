@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AddressController;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\admin\FetchEmployeeOptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::get('/', function () {
 Route::group(['middleware' => ['web',config('backpack.base.middleware_key', 'admin')
 ], 'namespace'  => 'admin'], function () {
     Route::get('address', [AddressController::class,'index'])->name('address.index');
+    Route::get('education', [FetchEmployeeOptionController::class,'index'])->name('education');
 });
 
 

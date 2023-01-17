@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
-class Option extends Model
+class Position extends Model
 {
     use CrudTrait;
 
@@ -16,7 +16,7 @@ class Option extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'options';
+    protected $table = 'positions';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];

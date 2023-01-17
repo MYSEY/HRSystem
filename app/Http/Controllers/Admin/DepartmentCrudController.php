@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\DepartmentRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -14,8 +15,8 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 class DepartmentCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     // use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
@@ -87,6 +88,29 @@ class DepartmentCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
+
+    public function store()
+    {
+        $this->crud->addField([
+            'name' => 'created_by',
+            'type' => 'hidden'
+        ]);
+        request()->merge([
+            'created_by' => Auth::id()
+        ]);
+        return $this->traitStore();
+    }
+    public function update()
+    {
+        $this->crud->addField([
+            'name' => 'updated_by',
+            'type' => 'hidden'
+        ]);
+        request()->merge([
+            'updated_by' => Auth::id()
+        ]);
+        return $this->traitUpdate();
+    }
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();

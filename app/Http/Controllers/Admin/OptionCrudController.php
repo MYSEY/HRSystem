@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\OptionRequest;
+use App\Models\Option;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -39,21 +40,42 @@ class OptionCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('id');
-        CRUD::column('name_khmer');
-        CRUD::column('name_english');
-        CRUD::column('type');
-        CRUD::column('created_by');
-        CRUD::column('updated_by');
-        CRUD::column('deleted_at');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        $this->crud->addColumn([
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => '#',
+            'orderable' => false,
+        ])->makeFirstColumn();
+        $this->crud->addColumn([
+            'name'  => 'name_khmer',
+            'type'  => 'text',
+            'label' => 'Name Khmer'
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'name_english',
+            'type'  => 'text',
+            'label' => 'Name English'
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'type',
+            'type'  => 'text',
+            'label' => 'Type'
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'created_by',
+            'type'  => 'text',
+            'label' => 'Created By'
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'updated_by',
+            'type'  => 'text',
+            'label' => 'Updated By'
+        ]);
+        $this->crud->addColumn([
+            'name'  => 'created_at',
+            'type'  => 'text',
+            'label' => 'Created At'
+        ]);
     }
 
     /**
@@ -66,21 +88,24 @@ class OptionCrudController extends CrudController
     {
         CRUD::setValidation(OptionRequest::class);
 
-        CRUD::field('id');
-        CRUD::field('name_khmer');
-        CRUD::field('name_english');
-        CRUD::field('type');
-        CRUD::field('created_by');
-        CRUD::field('updated_by');
-        CRUD::field('deleted_at');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
+        $this->crud->addField([
+            'name'  => 'name_khmer',
+            'type'  => 'text',
+            'label' => 'Name Khmer'
+        ]);
+        $this->crud->addField([
+            'name'  => 'name_english',
+            'type'  => 'text',
+            'label' => 'Name English'
+        ]);
+        $this->crud->addField([
+            'name'        => 'type',
+            'label'       => "Type",
+            'type'        => 'select2_from_array',
+            'options'     => Option::get()->pluck('type', 'id')->toArray(),
+            'allows_null' => false,
+            'default'     => '1',
+        ]);
     }
 
     /**

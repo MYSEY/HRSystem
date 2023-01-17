@@ -33,7 +33,8 @@ class CreateEmployeesTable extends Migration
             $table->date('date_of_commencement')->nullable();
             $table->string('email');
             $table->longText('profile')->nullable();
-            $table->string('certificate')->nullable();
+            $table->longText('guarantee_letter')->nullable();
+            $table->longText('employment_book')->nullable();
             $table->string('identity_type')->nullable();
             $table->integer('identity_number')->nullable();
             $table->date('issue_date')->nullable();
@@ -47,10 +48,11 @@ class CreateEmployeesTable extends Migration
             $table->string('telegram')->nullable();
             $table->string('messenger')->nullable();
             $table->string('skype')->nullable();
-            $table->string('website')->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('linkedin')->nullable();
-            $table->string('twitter')->nullable();
+            $table->date('pass_date')->nullable();
+            $table->date('expired_date')->nullable();
+            $table->string('fixed_dura_con_type')->nullable();
+            $table->date('fdc_date')->nullable();
+            $table->date('fdc_end')->nullable();
             $table->boolean('active')->default(1);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
