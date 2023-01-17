@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
+use App\Repositories\Admin\EmployeeRepository;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -32,9 +33,11 @@ class EmployeeCrudController extends CrudController
 
     public $startLabel = '<label class="navbar-brand custom-navbar-brand mb-0">';
     public $endLabel = '</label>';
+    protected $employeeRepo;
     public function setup()
     {
         CRUD::setModel(\App\Models\Employee::class);
+        $this->employeeRepo = resolve(EmployeeRepository::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/employee');
         CRUD::setEntityNameStrings('employee', 'employees');
     }
@@ -194,6 +197,23 @@ class EmployeeCrudController extends CrudController
                 }
             ],
         );
+        $this->crud->addColumn(
+            [
+                'label' => 'Updated By',
+                'name'  => 'updated_by',
+                'type'     => 'closure',
+                'attribute' => 'name',
+                'function' => function ($entry) {
+                    return optional($entry->upldatedBy)->FullName;
+                },
+                'searchLogic' => function ($query, $column, $searchTerm) {
+                    $query->orWhereHas('upldatedBy', function ($q) use ($column, $searchTerm) {
+                        $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
+                            ->orWhere('name', 'like', '%' . $searchTerm . '%');
+                    });
+                }
+            ],
+        );
     }
 
 
@@ -206,12 +226,15 @@ class EmployeeCrudController extends CrudController
         request()->merge([
             'created_by' => Auth::id()
         ]);
+
+        $entry = $this->crud->entry;
+        $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
         return $this->traitStore();
     }
 
 
 
-    public function update()
+    public function update($id)
     {
         $this->crud->addField([
             'name' => 'updated_by',
@@ -220,6 +243,8 @@ class EmployeeCrudController extends CrudController
         request()->merge([
             'updated_by' => Auth::id()
         ]);
+        $entry = $this->crud->getEntry($id);
+        $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
         return $this->traitUpdate();
     }
     /**
@@ -235,6 +260,9 @@ class EmployeeCrudController extends CrudController
         $colMd12 = ['class' => 'form-group col-md-12 col-12'];
 
         $tabOne = 'Employee Info';
+        $tabTwo = "Education";
+
+
         $this->crud->addField([
             'name'  => 'number_employee',
             'label' => 'Employee ID',
@@ -406,12 +434,14 @@ class EmployeeCrudController extends CrudController
             'wrapperAttributes' => $colMd12,
         ]);
         $this->crud->addField([
-            'label' => 'Identity Type',
-            'type' => "text",
-            'name' => 'identity_type',
-            'tab' => $tabOne,
+            'name'    => 'identity_type',
+            'label'   => 'Identity Type',
+            'type'    => 'select2_from_array',
+            'options' => ['1' => 'ID Card', '2' => 'Passport','3'=>'Family Book','4'=>'Residential','5'=>'Other'],
             'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
         ]);
+        
         $this->crud->addField([
             'label' => 'Identity Number',
             'type' => "number",
@@ -567,6 +597,13 @@ class EmployeeCrudController extends CrudController
             'default' => config('const.filePath.default_user'),
             'tab'   =>  $tabOne,
             'wrapperAttributes' => $colMd6,
+        ]);
+
+        $this->crud->addField([
+            'label' => '',
+            'name' => '',
+            'type' => 'flexi.employee.education',
+            'tab' => $tabTwo,
         ]);
 
         // CRUD::field('profile');

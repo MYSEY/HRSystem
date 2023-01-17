@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Helpers\Helper;
 use App\Models\Branchs;
+use App\Models\Education;
 use App\Models\Department;
 use Illuminate\Support\Str;
 use App\Traits\UploadFiles\UploadFIle;
@@ -56,6 +57,10 @@ class Employee extends Model
     public function branch()
     {
         return $this->belongsTo(Branchs::class ,'branch_id');
+    }
+    public function educations()
+    {
+        return $this->hasMany(Education::class, 'employee_id', 'id');
     }
     /*
     |--------------------------------------------------------------------------

@@ -31,4 +31,10 @@
     <ul class="nav-dropdown-items">
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('branchs') }}'><i class='nav-icon la la-question'></i> Branchs</a></li>
     </ul>
+    <ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('holiday') }}'><i class='nav-icon la la-question'></i> Holidays</a></li>
+    </ul>
+    <ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('option') }}'><i class='nav-icon la la-question'></i> Options</a></li>
+    </ul>
 </li>
