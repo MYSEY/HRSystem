@@ -13,14 +13,24 @@
                         <label>Degree</label>
                         <select name="degree[]" class="form-control degree">
                             <option value="" disabled selected>select degree</option>
-                            <option value="{{ $education->degree }}" selected>{{ $education->degree }}</option>
+                            <?php 
+                                $degree = \App\Models\Option::find($education->degree);
+                            ?>
+                            @if(!empty($degree))
+                                <option value="{{ $education->degree }}" selected>{{ $degree->name_khmer }}</option>
+                            @endif
                         </select>
                     </div>
                     <div class="col-sm-6 col-md-6 mb-3">
                         <label>Field Of Study</label>
                         <select name="field_of_study[]" class="form-control field-of-study">
                             <option value="" disabled selected>select field of study</option>
-                            <option value="{{ $education->field_of_study }}" selected>{{ $education->field_of_study }}</option>
+                            <?php 
+                                $fieldOfStudy = \App\Models\Option::find($education->field_of_study);
+                            ?>
+                            @if(!empty($fieldOfStudy))
+                                <option value="{{ $education->field_of_study }}" selected>{{ $fieldOfStudy->name_khmer }}</option>
+                            @endif
                         </select>
                     </div>
                     <div class="form-group col-md-6 col-12">    

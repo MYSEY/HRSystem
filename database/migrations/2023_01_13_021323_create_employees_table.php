@@ -18,6 +18,7 @@ class CreateEmployeesTable extends Migration
             $table->string('number_employee')->nullable();
             $table->integer('department_id');
             $table->integer('branch_id');
+            $table->string('position_id');
             $table->string('unit')->nullable();
             $table->string('level')->nullable();
             $table->string('employee_name_kh');
@@ -29,7 +30,6 @@ class CreateEmployeesTable extends Migration
             $table->string('current_street_no')->nullable();
             $table->string('permanent_house_no')->nullable();
             $table->string('permanent_street_no')->nullable();
-            $table->string('position');
             $table->date('date_of_commencement')->nullable();
             $table->string('email');
             $table->longText('profile')->nullable();
@@ -44,16 +44,15 @@ class CreateEmployeesTable extends Migration
             $table->string('company_phone_number')->nullable();
             $table->string('personal_phone_number')->nullable();
             $table->string('agency_phone_number')->nullable();
-            $table->string('what_app')->nullable();
             $table->string('telegram')->nullable();
             $table->string('messenger')->nullable();
-            $table->string('skype')->nullable();
             $table->date('pass_date')->nullable();
             $table->date('expired_date')->nullable();
             $table->string('fixed_dura_con_type')->nullable();
             $table->date('fdc_date')->nullable();
             $table->date('fdc_end')->nullable();
             $table->boolean('active')->default(1);
+            $table->string('status')->default('new');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->dateTime('deleted_at')->nullable();

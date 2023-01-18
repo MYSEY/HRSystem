@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
+use App\Models\Position;
 use App\Repositories\Admin\EmployeeRepository;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -77,15 +78,15 @@ class EmployeeCrudController extends CrudController
         });
 
         $this->crud->addFilter([
-            'name'  => 'position',
+            'name'  => 'position_id',
             'type'  => 'select2',
             'label' => 'Position'
         ],
         function(){
-            return Employee::pluck('position', 'position')->toArray();
+            return Employee::pluck('position_id', 'position_id')->toArray();
         }, 
         function($value) { // if the filter is active
-            $this->crud->addClause('where', 'position', $value);
+            $this->crud->addClause('where', 'position_id', $value);
         });
 
         $this->crud->addColumn([
@@ -115,17 +116,32 @@ class EmployeeCrudController extends CrudController
         $this->crud->addColumn([
             'name'  => 'employee_name_en',
             'type'  => 'text',
-            'label' => 'Name Khmer'
+            'label' => 'Employee Name (EN)'
         ]);
         $this->crud->addColumn([
             'name'  => 'employee_name_kh',
             'type'  => 'text',
-            'label' => 'Name English'
+            'label' => 'Employee Name (KH)'
         ]);
+        // $this->crud->addColumn([
+        //     'name'  => 'position',
+        //     'type'  => 'dete',
+        //     'label' => 'Position'
+        // ]);
         $this->crud->addColumn([
-            'name'  => 'position',
-            'type'  => 'dete',
-            'label' => 'Position'
+            'name'  => 'position_id',
+            'label' => 'Position',
+            'type'  => 'closure',
+            'attribute' => 'name_khmer',
+            'function' => function ($entry) {
+                return optional($entry->position)->name_khmer;
+            },
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhereHas('position', function ($q) use ($column, $searchTerm) {
+                    $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
+                    ->orWhere('name_khmer', 'like', '%' . $searchTerm . '%');
+                });
+            }
         ]);
         $this->crud->addColumn([
             'name'  => 'department',
@@ -209,7 +225,7 @@ class EmployeeCrudController extends CrudController
                 'searchLogic' => function ($query, $column, $searchTerm) {
                     $query->orWhereHas('upldatedBy', function ($q) use ($column, $searchTerm) {
                         $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
-                            ->orWhere('name', 'like', '%' . $searchTerm . '%');
+                        ->orWhere('name', 'like', '%' . $searchTerm . '%');
                     });
                 }
             ],
@@ -270,14 +286,14 @@ class EmployeeCrudController extends CrudController
         ]);
         $this->crud->addField([
             'name'  => 'employee_name_kh',
-            'label' => 'Name Khmer',
+            'label' => 'Employee Name (KH)',
             'type'  => 'text',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
             'name'  => 'employee_name_en',
-            'label' => 'Name English',
+            'label' => 'Employee Name (EN)',
             'type'  => 'text',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
@@ -327,9 +343,12 @@ class EmployeeCrudController extends CrudController
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
-            'name'  => 'position',
+            'name'  => 'position_id',
             'label' => 'Position',
-            'type'  => 'text',
+            'type'        => 'select2_from_array',
+            'options'     => Position::get()->pluck('name_khmer', 'id')->toArray(),
+            'allows_null' => false,
+            'default'     => 'one',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -422,13 +441,6 @@ class EmployeeCrudController extends CrudController
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
-            'name'  => 'what_app',
-            'label' => 'What App',
-            'type'  => 'text',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
             'name'  => 'telegram',
             'label' => 'Telegram',
             'type'  => 'text',
@@ -438,13 +450,6 @@ class EmployeeCrudController extends CrudController
         $this->crud->addField([
             'name'  => 'messenger',
             'label' => 'Messenger',
-            'type'  => 'text',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'skype',
-            'label' => 'Skype',
             'type'  => 'text',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne

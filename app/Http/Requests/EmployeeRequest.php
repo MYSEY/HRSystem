@@ -29,7 +29,7 @@ class EmployeeRequest extends FormRequest
             'employee_name_en' => 'required|max:255',
             'date_of_birth' => 'required',
             'branch_id' => 'required|integer',
-            'position' => 'required',
+            'position_id' => 'required',
             'department_id' => 'required|integer',
             'personal_phone_number' => 'required|min:9|max:15',
             'company_phone_number' => 'required|min:9|max:15',
