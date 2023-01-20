@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
+use App\Models\Option;
 use App\Models\Position;
 use App\Repositories\Admin\EmployeeRepository;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -245,6 +246,7 @@ class EmployeeCrudController extends CrudController
 
         $entry = $this->crud->entry;
         $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
+        $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
         return $this->traitStore();
     }
 
@@ -259,6 +261,7 @@ class EmployeeCrudController extends CrudController
         ]);
         $entry = $this->crud->getEntry($id);
         $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
+        $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
         return $this->traitUpdate();
     }
     /**
@@ -275,6 +278,7 @@ class EmployeeCrudController extends CrudController
 
         $tabOne = 'Employee Info';
         $tabTwo = "Education";
+        $tabThree = "Experience";
 
 
         $this->crud->addField([
@@ -302,8 +306,8 @@ class EmployeeCrudController extends CrudController
             'name'  => 'gender',
             'label' => 'Gender',
             'type'        => 'select2_from_array',
-            'options'     => ['1' => 'Male', '2' => 'Femail','3'=> 'Other'],
-            'allows_null' => false,
+            'options'     => Option::where('type','gender')->get()->pluck('name_khmer', 'id')->toArray(),
+            'default'     => 'one',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -329,7 +333,6 @@ class EmployeeCrudController extends CrudController
             'label'       => "Branch",
             'type'        => 'select2_from_array',
             'options'     => Branchs::get()->pluck('branch_name_kh', 'id')->toArray(),
-            'allows_null' => false,
             'default'     => 'one',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
@@ -347,7 +350,6 @@ class EmployeeCrudController extends CrudController
             'label' => 'Position',
             'type'        => 'select2_from_array',
             'options'     => Position::get()->pluck('name_khmer', 'id')->toArray(),
-            'allows_null' => false,
             'default'     => 'one',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
@@ -357,7 +359,6 @@ class EmployeeCrudController extends CrudController
             'label'       => "Department",
             'type'        => 'select2_from_array',
             'options'     => Department::get()->pluck('name', 'id')->toArray(),
-            'allows_null' => false,
             'default'     => 'one',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
@@ -373,16 +374,6 @@ class EmployeeCrudController extends CrudController
             'name'  => 'date_of_commencement',
             'label' => 'Date Of Commencement',
             'type'  => 'date',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-    
-        $this->crud->addField([
-            'name'  => 'fixed_dura_con_type',
-            'label' => 'Duration Type',
-            'type'        => 'select2_from_array',
-            'options'     => ['1' => 'FDC', '2' => 'UDC'],
-            'allows_null' => false,
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -402,6 +393,16 @@ class EmployeeCrudController extends CrudController
             'upload' => true,
             'tab' => $tabOne,
             'wrapperAttributes' => $colMd6,
+        ]);
+
+        $this->crud->addField([
+            'name'  => 'fixed_dura_con_type',
+            'label' => 'Duration Type',
+            'type'        => 'select2_from_array',
+            'options'     => ['1' => 'FDC', '2' => 'UDC'],
+            'allows_null' => false,
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
         ]);
 
         // Contact Info
@@ -466,8 +467,9 @@ class EmployeeCrudController extends CrudController
         $this->crud->addField([
             'name'    => 'identity_type',
             'label'   => 'Identity Type',
-            'type'    => 'select2_from_array',
-            'options' => ['1' => 'ID Card', '2' => 'Passport','3'=>'Family Book','4'=>'Residential','5'=>'Other'],
+            'type'        => 'select2_from_array',
+            'options'     => Option::where('type','identity_type')->get()->pluck('name_khmer', 'id')->toArray(),
+            'default'     => 'one',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -575,11 +577,20 @@ class EmployeeCrudController extends CrudController
             'wrapperAttributes' => $colMd6,
         ]);
 
+        // employee education
         $this->crud->addField([
             'label' => '',
             'name' => '',
-            'type' => 'flexi.employee.education',
+            'type' => 'employee.education',
             'tab' => $tabTwo,
+        ]);
+
+        // employee experience
+        $this->crud->addField([
+            'label' => 'experience',
+            'name' => 'experience',
+            'type' => 'employee.experience',
+            'tab' => $tabThree,
         ]);
 
         // CRUD::field('profile');

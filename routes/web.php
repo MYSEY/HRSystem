@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\admin\FetchExperienceController;
 use App\Http\Controllers\admin\FetchEmployeeOptionController;
 
 /*
@@ -27,6 +28,7 @@ Route::group(['middleware' => ['web',config('backpack.base.middleware_key', 'adm
 ], 'namespace'  => 'admin'], function () {
     Route::get('address', [AddressController::class,'index'])->name('address.index');
     Route::get('education', [FetchEmployeeOptionController::class,'index'])->name('education');
+    Route::get('experience', [FetchExperienceController::class,'index'])->name('experience');
 });
 
 

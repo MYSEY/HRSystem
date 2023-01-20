@@ -16,6 +16,7 @@ class OptionSeeder extends Seeder
      */
     public function run()
     {
+        //education
         Option::firstOrCreate([
             'name_khmer' => 'Economics and Management',
             'name_english'=>'Economics and Management',
@@ -41,6 +42,7 @@ class OptionSeeder extends Seeder
             'created_by'    => Auth::id(),
         ]);
 
+        //Gender
         Option::firstOrCreate([
             'name_khmer' => 'Male',
             'name_english'=>'Male',
@@ -57,6 +59,52 @@ class OptionSeeder extends Seeder
             'name_khmer' => 'Other',
             'name_english'=>'Other',
             'type' => 'gender',
+            'created_by'    => Auth::id(),
+        ]);
+
+        // identity type
+        Option::firstOrCreate([
+            'name_khmer' => 'ID Card',
+            'name_english'=>'ID Card',
+            'type' => 'identity_type',
+            'created_by'    => Auth::id(),
+        ]);
+        Option::firstOrCreate([
+            'name_khmer' => 'Passport',
+            'name_english'=>'Passport',
+            'type' => 'identity_type',
+            'created_by'    => Auth::id(),
+        ]);
+        Option::firstOrCreate([
+            'name_khmer' => 'Family Book',
+            'name_english'=>'Family Book',
+            'type' => 'identity_type',
+            'created_by'    => Auth::id(),
+        ]);
+        Option::firstOrCreate([
+            'name_khmer' => 'Residential',
+            'name_english'=>'Residential',
+            'type' => 'identity_type',
+            'created_by'    => Auth::id(),
+        ]);
+        Option::firstOrCreate([
+            'name_khmer' => 'Other',
+            'name_english'=>'Other',
+            'type' => 'identity_type',
+            'created_by'    => Auth::id(),
+        ]);
+
+        // experience
+        Option::firstOrCreate([
+            'name_khmer' => 'Full-Time',
+            'name_english'=>'Full-Time',
+            'type' => 'experience',
+            'created_by'    => Auth::id(),
+        ]);
+        Option::firstOrCreate([
+            'name_khmer' => 'Path-Time',
+            'name_english'=>'Path-Time',
+            'type' => 'experience',
             'created_by'    => Auth::id(),
         ]);
     }

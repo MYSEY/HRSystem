@@ -3,8 +3,9 @@
 namespace App\Repositories\Admin;
 
 use Carbon\Carbon;
-use App\Models\Education;
 use App\Models\Employee;
+use App\Models\Education;
+use App\Models\Experence;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\UploadFiles\UploadFIle;
@@ -61,6 +62,37 @@ class EmployeeRepository extends BaseRepository
                         'updated_by'        => Auth::id()
                     ]);
                 }
+            }
+        } catch (\Exception $exp) {
+            /*
+            * ERROR
+            */
+        }
+    }
+    
+    public function updateOrCreateExperience($entry, $request)
+    {
+        try {
+            Experence::where('employee_id', $entry->id)->delete();
+            $titles = $request->title;
+            if (is_array($titles) && count($titles)) {
+                foreach ($titles as $key => $title) :
+                    if (!empty($title)) :
+                        Experence::updateOrCreate([
+                            'employee_id' => $entry->id,
+                        ],[
+                            'employee_id' => $entry->id,
+                            'title' => $title ?? '',
+                            'employment_type' => $request->employment_type[$key] ?? '',
+                            'company_name' => $request->company_name[$key] ?? '',
+                            'location' => $request->location[$key] ?? '',
+                            'description' => $request->description[$key] ?? '',
+                            'start_date' => !empty($request->start_date[$key]) ? Carbon::parse($request->start_date[$key])->format('Y-m-d') : '',
+                            'end_date' => !empty($request->end_date[$key]) ? Carbon::parse($request->end_date[$key])->format('Y-m-d') : '',
+                            'updated_by' => Auth::id(),
+                        ]);
+                    endif;
+                endforeach;
             }
         } catch (\Exception $exp) {
             /*
