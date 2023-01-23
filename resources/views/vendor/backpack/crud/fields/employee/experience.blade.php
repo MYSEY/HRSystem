@@ -1,5 +1,5 @@
 <div class="form-group col-md-12" id="experience-container-repeatable-elements">
-    @if(!empty($entry) && !empty($entry->experiences))
+    @if(!empty($entry->experiences) && !empty($entry->experiences))
         @if(count($entry->experiences))
             @foreach($entry->experiences as $key => $experience)
                 <div class="row experience-repeatable-element repeatable-element mt-3">

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Bank;
 use App\Models\User;
 use App\Helpers\Helper;
 use App\Models\Branchs;
 use App\Models\Position;
 use App\Models\Education;
 use App\Models\Department;
+use App\Models\Experience;
 use Illuminate\Support\Str;
 use App\Traits\UploadFiles\UploadFIle;
 use Illuminate\Database\Eloquent\Model;
@@ -65,6 +67,14 @@ class Employee extends Model
     public function educations()
     {
         return $this->hasMany(Education::class, 'employee_id', 'id');
+    }
+    public function experiences()
+    {
+        return $this->hasMany(Experience::class, 'employee_id', 'id');
+    }
+    public function banks()
+    {
+        return $this->hasMany(Bank::class, 'employee_id', 'id');
     }
     /*
     |--------------------------------------------------------------------------

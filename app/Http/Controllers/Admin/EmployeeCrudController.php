@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Option;
 use App\Helpers\Helper;
 use App\Models\Branchs;
 use App\Models\Employee;
+use App\Models\Position;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
-use App\Models\Option;
-use App\Models\Position;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 use App\Repositories\Admin\EmployeeRepository;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -124,11 +126,7 @@ class EmployeeCrudController extends CrudController
             'type'  => 'text',
             'label' => 'Employee Name (KH)'
         ]);
-        // $this->crud->addColumn([
-        //     'name'  => 'position',
-        //     'type'  => 'dete',
-        //     'label' => 'Position'
-        // ]);
+    
         $this->crud->addColumn([
             'name'  => 'position_id',
             'label' => 'Position',
@@ -236,6 +234,8 @@ class EmployeeCrudController extends CrudController
 
     public function store()
     {
+        $this->putSession($this->crud->getRequest());
+
         $this->crud->addField([
             'name' => 'created_by',
             'type' => 'hidden'
@@ -247,6 +247,7 @@ class EmployeeCrudController extends CrudController
         $entry = $this->crud->entry;
         $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
         $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
+        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
         return $this->traitStore();
     }
 
@@ -262,6 +263,7 @@ class EmployeeCrudController extends CrudController
         $entry = $this->crud->getEntry($id);
         $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
         $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
+        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
         return $this->traitUpdate();
     }
     /**
@@ -273,12 +275,14 @@ class EmployeeCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(EmployeeRequest::class);
-        $colMd6 = ['class' => 'form-group col-md-6 col-12' ]; 
+        $colMd6 = ['class' => 'form-group col-md-6 col-12']; 
         $colMd12 = ['class' => 'form-group col-md-12 col-12'];
-
         $tabOne = 'Employee Info';
         $tabTwo = "Education";
         $tabThree = "Experience";
+        $tabFour = "Banks";
+        $tabFive = "Staff Promoted";
+        
 
 
         $this->crud->addField([
@@ -323,7 +327,7 @@ class EmployeeCrudController extends CrudController
             'label'       => "Nationality",
             'type'        => 'select2_from_array',
             'options'     => ['khmer' => 'Khmer', 'chinese' => 'Chinese'],
-            'allows_null' => false,
+            // 'allows_null' => false,
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -579,8 +583,8 @@ class EmployeeCrudController extends CrudController
 
         // employee education
         $this->crud->addField([
-            'label' => '',
-            'name' => '',
+            'label' => 'education',
+            'name' => 'education',
             'type' => 'employee.education',
             'tab' => $tabTwo,
         ]);
@@ -592,8 +596,23 @@ class EmployeeCrudController extends CrudController
             'type' => 'employee.experience',
             'tab' => $tabThree,
         ]);
+        // employee bank
+        $this->crud->addField([
+            'label' => 'banks',
+            'name' => 'banks',
+            'type' => 'employee.banks',
+            'tab' => $tabFour,
+        ]);
+        if (Request::instance()->segment(3) == 'create') {
 
-        // CRUD::field('profile');
+        } else {
+            $this->crud->addField([
+                'label' => 'staff_promoted',
+                'name' => 'staff_promoted',
+                'type' => 'employee.staff_promoted',
+                'tab' => $tabFive,
+            ]);
+        }
     }
 
     /**
@@ -602,8 +621,37 @@ class EmployeeCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
+
+    public function putSession($request)
+    {
+        foreach ($this->fields() as $field) {
+            Session::put($field, $request->{$field});
+        }
+    }
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+
+    public function fields()
+    {
+        return [
+            'title',
+            'location',
+            'end_date',
+            'start_date',
+            'description',
+            'company_name',
+            'employment_type',
+            'grade',
+            'school',
+            'degree',
+            'field_of_study',
+            'education_end_date',
+            'education_start_date',
+            'education_description',
+            'address'
+        ];
     }
 }

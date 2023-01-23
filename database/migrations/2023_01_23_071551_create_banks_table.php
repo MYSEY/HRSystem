@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExperencesTable extends Migration
+class CreateBanksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,12 @@ class CreateExperencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('experences', function (Blueprint $table) {
+        Schema::create('banks', function (Blueprint $table) {
             $table->id();
             $table->integer('employee_id')->nullable();
-            $table->string('title')->nullable();
-            $table->integer('employment_type')->nullable();
-            $table->string('company_name')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->string('location')->nullable();
-            $table->text('description')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('account_name')->nullable();
+            $table->string('account_number')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->dateTime('deleted_at')->nullable();
@@ -37,6 +33,6 @@ class CreateExperencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('experences');
+        Schema::dropIfExists('banks');
     }
 }
