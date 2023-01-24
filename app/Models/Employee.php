@@ -11,6 +11,7 @@ use App\Models\Education;
 use App\Models\Department;
 use App\Models\Experience;
 use Illuminate\Support\Str;
+use App\Models\StaffPromoted;
 use App\Traits\UploadFiles\UploadFIle;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -76,6 +77,10 @@ class Employee extends Model
     {
         return $this->hasMany(Bank::class, 'employee_id', 'id');
     }
+    public function staffPromoted()
+    {
+        return $this->belongsTo(StaffPromoted::class, 'employee_id', 'id');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -122,6 +127,7 @@ class Employee extends Model
             $this->attributes['profile'] = $this->base64Upload($value);
         }
     }
+   
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

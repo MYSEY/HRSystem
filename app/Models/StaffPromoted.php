@@ -12,8 +12,8 @@ class StaffPromoted extends Model
     protected $guarded = ['id'];
     protected $fillable = [
         'employee_id',
-        'position_id',
-        'department_id',
+        'posit_id',
+        'depart_id',
         'created_by',
         'updated_by'
     ];

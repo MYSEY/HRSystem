@@ -8,6 +8,7 @@ use App\Models\Branchs;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Department;
+use App\Models\StaffPromoted;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
 use Illuminate\Support\Facades\Request;
@@ -264,6 +265,7 @@ class EmployeeCrudController extends CrudController
         $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
         $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
         $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
+        $this->employeeRepo->StaffPromotedRepoUpdateOrCreate($entry, $this->crud->getRequest());
         return $this->traitUpdate();
     }
     /**
@@ -283,8 +285,6 @@ class EmployeeCrudController extends CrudController
         $tabFour = "Banks";
         $tabFive = "Staff Promoted";
         
-
-
         $this->crud->addField([
             'name'  => 'number_employee',
             'label' => 'Employee ID',

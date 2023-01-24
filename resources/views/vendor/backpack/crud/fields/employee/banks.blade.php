@@ -16,7 +16,6 @@
                     </div>
                     <div class="col-sm-4 col-md-4 mb-3">
                         <label>Account Number</label>
-                        <label>Account Number</label>
                         <input type="number" class="form-control" name="account_number[]" value="{{ $item->account_number }}">
                     </div>
                 </div>
