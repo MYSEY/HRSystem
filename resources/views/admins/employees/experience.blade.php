@@ -1,5 +1,4 @@
 
-@dd($entry);
 @if (!empty($entry) && !empty($entry->experiences))
     @if (count($entry->experiences))
         @foreach ($entry->experiences as $key => $item)
