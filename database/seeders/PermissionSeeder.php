@@ -24,8 +24,8 @@ class PermissionSeeder extends Seeder
         $user = User::firstOrCreate([
             'email' => 'administrator@gmail.com',
         ], [
-            'name' => 'Admin',
-            'last_name' => 'Dev',
+            'name' => 'Sey',
+            'last_name' => 'Admin',
             'phone' => '+0889377310',
             'password' => Hash::make('admin@009')
         ]);

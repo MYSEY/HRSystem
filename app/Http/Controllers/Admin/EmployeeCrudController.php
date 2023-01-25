@@ -129,7 +129,7 @@ class EmployeeCrudController extends CrudController
         ]);
     
         $this->crud->addColumn([
-            'name'  => 'position_id',
+            'name'  => 'EmployeePosition',
             'label' => 'Position',
             'type'  => 'closure',
             'attribute' => 'name_khmer',
@@ -144,7 +144,7 @@ class EmployeeCrudController extends CrudController
             }
         ]);
         $this->crud->addColumn([
-            'name'  => 'department',
+            'name'  => 'EmployeeDepartment',
             'label' => 'Department',
             'type'  => 'closure',
             'attribute' => 'name',
@@ -230,26 +230,6 @@ class EmployeeCrudController extends CrudController
                 }
             ],
         );
-    }
-
-
-    public function store()
-    {
-        $this->putSession($this->crud->getRequest());
-
-        $this->crud->addField([
-            'name' => 'created_by',
-            'type' => 'hidden'
-        ]);
-        request()->merge([
-            'created_by' => Auth::id()
-        ]);
-
-        $entry = $this->crud->entry;
-        $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
-        $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
-        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
-        return $this->traitStore();
     }
 
     public function update($id)
@@ -400,6 +380,14 @@ class EmployeeCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'name'  => 'number_of_children',
+            'label' => 'Number Of Children',
+            'type'  => 'number',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        
+        $this->crud->addField([
             'name'  => 'fixed_dura_con_type',
             'label' => 'Duration Type',
             'type'        => 'select2_from_array',
@@ -409,6 +397,13 @@ class EmployeeCrudController extends CrudController
             'tab'   =>  $tabOne
         ]);
 
+        $this->crud->addField([
+            'name'  => 'remark',
+            'label' => 'Remark',
+            'type'  => 'textarea',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
         // Contact Info
         $this->crud->addField([
             'name' => 'Contact Info',
@@ -613,6 +608,32 @@ class EmployeeCrudController extends CrudController
                 'tab' => $tabFive,
             ]);
         }
+    }
+
+    public function show($id)
+    {
+        $this->data['entry'] = $this->crud->getEntry($id);
+        $this->data['crud'] = $this->crud;
+        return view('admins.employees.show', $this->data);
+    }
+
+    public function store()
+    {
+        $this->putSession($this->crud->getRequest());
+
+        $this->crud->addField([
+            'name' => 'created_by',
+            'type' => 'hidden'
+        ]);
+        request()->merge([
+            'created_by' => Auth::id()
+        ]);
+
+        $entry = $this->crud->entry;
+        $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
+        $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
+        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
+        return $this->traitStore();
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Bank;
 use App\Models\User;
+use App\Models\Option;
 use App\Helpers\Helper;
 use App\Models\Branchs;
 use App\Models\Position;
@@ -11,6 +12,7 @@ use App\Models\Education;
 use App\Models\Department;
 use App\Models\Experience;
 use Illuminate\Support\Str;
+use App\Traits\AddressTrait;
 use App\Models\StaffPromoted;
 use App\Traits\UploadFiles\UploadFIle;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +22,8 @@ class Employee extends Model
 {
     use CrudTrait;
     use UploadFIle;
+    use AddressTrait;
+
 
 
     /*
@@ -81,6 +85,7 @@ class Employee extends Model
     {
         return $this->belongsTo(StaffPromoted::class, 'employee_id', 'id');
     }
+    
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -126,6 +131,97 @@ class Employee extends Model
         } else {
             $this->attributes['profile'] = $this->base64Upload($value);
         }
+    }
+
+    public function getEmployeePositionAttribute(){
+        return optional($this->position)->name_khmer;
+    }
+    public function getEmployeeDepartmentAttribute(){
+        return optional($this->department)->name;
+    }
+    public function getEmployeeGenderAttribute(){
+        $data = Option::where('type','gender')->get();
+        foreach($data as $item){
+            if($this->gender == $item->id){
+                $Gender = $item->name_khmer;
+            }
+        }
+        return $Gender;
+    }
+    public function getEmployeeIdentityTypeAttribute(){
+        $data = Option::where('type','identity_type')->get();
+        foreach($data as $item){
+            if($this->identity_type == $item->id){
+                $IdentityType = $item->name_khmer;
+            }
+        }
+        return $IdentityType;
+    }
+    
+    public function getEmployeeBrnachAttribute(){
+        return optional($this->branch)->branch_name_kh;
+    }
+    //// GET EN ADRESS
+    public function getCityEnAttribute()
+    {
+        return $this->getAddress('city', 'en', $this->current_addtress);
+    }
+    public function getDistrictEnAttribute()
+    {
+        return $this->getAddress('district', 'en', $this->current_addtress);
+    }
+    public function getCommuneEnAttribute()
+    {
+        return $this->getAddress('commune', 'en', $this->current_addtress);
+    }
+    public function getVillageEnAttribute()
+    {
+        return $this->getAddress('village', 'en', $this->current_addtress);
+    }
+    public function getFullAddressEnAttribute()
+    {
+        $houseNo = $streetNo = '';
+        if (!empty($this->current_house_no)) {
+            $houseNo = 'House ' . $this->current_house_no . ',' ?? '';
+        }
+        if (!empty($this->current_street_no)) {
+            $streetNo = 'Street ' . $this->current_street_no . ',' ?? '';
+        }
+        return $houseNo . $streetNo . $this->getAddress('full', 'en', $this->current_addtress);
+    }
+
+
+    // GET KH ADDRESS
+    public function getCityKhAttribute()
+    {
+        return $this->getAddress('city', 'kh', $this->permanent_addtress);
+    }
+
+    public function getDistrictKhAttribute()
+    {
+        return $this->getAddress('district', 'kh', $this->permanent_addtress);
+    }
+
+    public function getCommuneKhAttribute()
+    {
+        return $this->getAddress('commune', 'kh', $this->permanent_addtress);
+    }
+
+    public function getVillageKhAttribute()
+    {
+        return $this->getAddress('village', 'kh', $this->permanent_addtress);
+    }
+
+    public function getFullAddressKhAttribute()
+    {
+        $houseNo = $streetNo = '';
+        if (!empty($this->permanent_house_no)) {
+            $houseNo = 'ផ្ទះលេខ ' . $this->permanent_house_no ?? '';
+        }
+        if (!empty($this->permanent_street_no)) {
+            $streetNo = 'ផ្លូវ ' . $this->permanent_street_no ?? '';
+        }
+        return $houseNo . ' ' .$streetNo .' '. $this->getAddress('full', 'kh', $this->permanent_addtress);
     }
    
     /*

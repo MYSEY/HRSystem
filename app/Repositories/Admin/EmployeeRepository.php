@@ -51,9 +51,7 @@ class EmployeeRepository extends BaseRepository
             if (is_array($schools) && count($schools)) {
                 foreach ($schools as $key => $school) :
                     if (!empty($school)) :
-                        Education::updateOrCreate([
-                            'employee_id' => $entry->id,
-                        ],[
+                        Education::create([
                             'employee_id'       => $entry->id,
                             'school'            => $school ?? '',
                             'field_of_study'    => $request->field_of_study[$key] ?? '',

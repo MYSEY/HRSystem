@@ -29,7 +29,7 @@ class UserUpdated extends FormRequest
             'phone' => 'required',
             'email' => 'required',
             'password' => 'required',
-            'position' => 'required',
+            'position_id' => 'required',
             'department_id' => 'required',
             'date_of_birth' => 'required',
             'password' => [

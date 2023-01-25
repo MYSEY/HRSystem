@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
+use App\Models\Position;
 use App\Models\Department;
 use Illuminate\Support\Str;
 use App\Traits\AddressTrait;
@@ -35,17 +36,11 @@ class User extends Authenticatable
         'email',
         'password',
         'date_of_birth',
-        'identity_type',
-        'identity_number',
-        'issue_date',
-        'house_no',
-        'street_no',
         'phone',
         'email',
-        'position',
+        'position_id',
         'department_id',
         'profile',
-        'address',
         'active',
         'created_by',
         'updated_by',
@@ -77,7 +72,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(self::class, 'created_by');
     }
-
+    public function position(){
+        return $this->belongsTo(Position::class,'position_id');
+    }
 
     public function getFullNameAttribute(){
         return $this->name.' '.$this->last_name;

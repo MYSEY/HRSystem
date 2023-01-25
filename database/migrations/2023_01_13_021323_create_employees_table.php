@@ -51,6 +51,10 @@ class CreateEmployeesTable extends Migration
             $table->string('fixed_dura_con_type')->nullable();
             $table->date('fdc_date')->nullable();
             $table->date('fdc_end')->nullable();
+            $table->date('resign_date')->nullable();
+            $table->string('resign_reason')->nullable();
+            $table->string('remark')->nullable();
+            $table->integer('number_of_children')->nullable();
             $table->boolean('active')->default(1);
             $table->string('status')->default('new');
             $table->unsignedBigInteger('created_by')->nullable();

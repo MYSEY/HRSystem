@@ -74,7 +74,7 @@
     {{-- Wrap the image or canvas element with a block element (container) --}}
     <div class="row">
         <div class="col-sm-6" data-handle="previewArea" style="margin-bottom: 20px;">
-            <img data-handle="mainImage" src="">
+            <img data-handle="mainImage" src="" width="100px">
         </div>
         @if(isset($field['crop']) && $field['crop'])
         <div class="col-sm-3" data-handle="previewArea">

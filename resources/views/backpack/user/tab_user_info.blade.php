@@ -17,32 +17,16 @@
             </tr>
             <tr>
               <th scope="row" class="border-0 bg-transparent" width="200">Date Of Birth</th>
-              <td class="border-0">:&nbsp;&nbsp;{{ $entry->date_of_birth ? date('d-m-Y', strtotime($entry->date_of_birth)) : '' }}</td>
+              <td class="border-0">:&nbsp;&nbsp;{{\Carbon\Carbon::parse($entry->date_of_birth)->format('d-M-Y') }}</td>
             </tr>
             <tr>
               <th scope="row" class="border-0 bg-transparent" width="200">Position</th>
-              <td class="border-0">:&nbsp;&nbsp;{{ $entry->position ? : '' }}</td>
+              <td class="border-0">:&nbsp;&nbsp;{{ optional($entry->position)->name_khmer ? : '' }}</td>
             </tr>
             <tr>
               <th scope="row" class="border-0 bg-transparent" width="200">Department</th>
               <td class="border-0">:&nbsp;&nbsp;{{ optional($entry->department)->name }}</td>
             </tr>
-            <tr>
-              <th scope="row" class="border-0 bg-transparent" width="200">Identity Type</th>
-              <td class="border-0">:&nbsp;&nbsp;{{ $entry->identity_type}} </td>
-            </tr>
-            <tr>
-              <th scope="row" class="border-0 bg-transparent" width="200">Identity Number</th>
-              <td class="border-0">:&nbsp;&nbsp;{{ $entry->identity_number ? : '' }}</td>
-          </tr>
-          <tr>
-              <th scope="row" class="border-0 bg-transparent" width="200">Issue Date</th>
-              <td class="border-0">:&nbsp;&nbsp;{{ $entry->issue_date ? date('d-m-Y', strtotime($entry->issue_date)) : '' }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="border-0 bg-transparent" width="200">Address</th>
-            <td class="border-0">:&nbsp;&nbsp;{{$entry->FullAddressKh}}</td>
-          </tr>
         </tbody>
       </table>
     </div>

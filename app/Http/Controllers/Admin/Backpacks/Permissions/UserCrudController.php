@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Models\Department;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdated;
+use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Backpack\PermissionManager\app\Models\Role;
@@ -110,10 +111,21 @@ class UserCrudController extends CrudController
             'label' => 'Date Of Birth',
             'type'  => 'date',
         ]);
+       
         $this->crud->addColumn([
-            'name'  => 'position',
+            'name'  => 'position_id',
             'label' => 'Position',
-            'type'  => 'text',
+            'type'  => 'closure',
+            'attribute' => 'name_khmer',
+            'function' => function ($entry) {
+                return optional($entry->position)->name_khmer;
+            },
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhereHas('position', function ($q) use ($column, $searchTerm) {
+                    $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
+                        ->orWhere('name_khmer', 'like', '%' . $searchTerm . '%');
+                });
+            }
         ]);
         $this->crud->addColumn([
             'label'     => 'Roles', // Table column heading
@@ -246,7 +258,7 @@ class UserCrudController extends CrudController
 
     protected function addUserFields()
     {
-        $colMd6 = ['class' => 'form-group col-md-6 col-12' ]; 
+        $colMd6 = ['class' => 'form-group col-md-6 col-12']; 
         $tabOne = 'User Info';
         $tabTwo = 'User Roles';
         $edit = $this->crud->actionIs('edit') ? "" : "";
@@ -286,52 +298,12 @@ class UserCrudController extends CrudController
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
-            'name'    => 'identity_type',
-            'label'   => 'Identity Type',
-            'type'    => 'select2_from_array',
-            'options' => ['1' => 'ID Card', '2' => 'Passport','3'=>'Family Book'],
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'identity_number',
-            'label' => 'Identity Number',
-            'type'  => 'number',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'issue_date',
-            'label' => 'Issue Date',
-            'type'  => 'date',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'house_no',
-            'label' => 'House No',
-            'type'  => 'text',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'street_no',
-            'label' => 'Street No',
-            'type'  => 'text',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name' => 'address',
-            'label' => 'address',
-            'type' => 'flexiaddress',
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
-        $this->crud->addField([
-            'name'  => 'position',
+            'name'  => 'position_id',
             'label' => 'Position',
-            'type'  => 'text',
+            'type'        => 'select2_from_array',
+            'options'     => Position::get()->pluck('name_khmer', 'id')->toArray(),
+            'allows_null' => false,
+            'default'     => 'one',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -364,15 +336,15 @@ class UserCrudController extends CrudController
         $this->crud->addField([
             'label' => 'Profile',
             'name' => "profile",
+            'type' => 'upload',
             'type' => 'image',
-            'upload' => true,
             'crop' => true,
             'aspect_ratio' => 0,
             'default' => config('const.filePath.default_user'),
             'tab'   =>  $tabOne,
-            'wrapperAttributes' => $colMd6,
+            'wrapperAttributes' => ['class' => 'form-group col-md-12 col-12'],
         ]);
-
+        
         $this->crud->addField([
             'name' => 'created_by',
             'type' => 'hidden',
