@@ -27,9 +27,9 @@ return [
         'default_icon'      => '/uploads/files/default/Question_mark_Icons.svg'
     ],
     's3Path' => [
-        'small' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/uploads/files/small/',
-        'medium' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/uploads/files/medium/',
-        'large' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/uploads/files/large/',
+        'small' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/storage/uploads/files/small/',
+        'medium' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/storage/uploads/files/medium/',
+        'large' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/storage/uploads/files/large/',
         'original' => env('DO_SPACE_URL') . env('DO_SPACE_NAME') . '/storage/uploads/files/original/'
     ],
 ];

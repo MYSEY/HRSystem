@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Bank;
 use App\Models\User;
 use App\Models\Option;
 use App\Helpers\Helper;
@@ -77,10 +76,7 @@ class Employee extends Model
     {
         return $this->hasMany(Experience::class, 'employee_id', 'id');
     }
-    public function banks()
-    {
-        return $this->hasMany(Bank::class, 'employee_id', 'id');
-    }
+    
     public function staffPromoted()
     {
         return $this->belongsTo(StaffPromoted::class, 'employee_id', 'id');
@@ -103,15 +99,9 @@ class Employee extends Model
     public function getBranchNamenKhmerAttribute(){
         return $this->branch_name_kh;
     }
-
     public function getMediumProfileAttribute()
     {
         return Helper::isUrl($this->profile) ? $this->profile : asset($this->getUploadImage($this->profile, 'medium', 'default_user'));
-    }
-
-    public function getProfileAttribute($value)
-    {
-        return Helper::isUrl($value) ? $value : asset($this->getUploadImage($value, 'original', 'default_user'));
     }
 
     public function setProfileAttribute($value)
@@ -131,6 +121,32 @@ class Employee extends Model
         } else {
             $this->attributes['profile'] = $this->base64Upload($value);
         }
+    }
+
+    public function setGuaranteeLetterAttribute($value)
+    {
+        if (!is_array(request()->guarantee_letter) && Str::startsWith($value, 'data:image')) {
+            $this->attributes['guarantee_letter'] = $this->base64Upload($value);
+        } else {
+            $this->attributes['guarantee_letter'] = $this->singleUpload('guarantee_letter', request(), false);
+        }
+    }
+    public function getGuaranteeLetterOriginalAttribute()
+    {
+        return asset($this->getUploadImage($this->guarantee_letter, 'original', 'default_user'));
+    }
+
+    public function setEmploymentBookAttribute($value)
+    {
+        if (!is_array(request()->employment_book) && Str::startsWith($value, 'data:image')) {
+            $this->attributes['employment_book'] = $this->base64Upload($value);
+        } else {
+            $this->attributes['employment_book'] = $this->singleUpload('employment_book', request(), false);
+        }
+    }
+    public function getEmploymentBookOriginalAttribute()
+    {
+        return asset($this->getUploadImage($this->employment_book, 'original', 'default_user'));
     }
 
     public function getEmployeePositionAttribute(){

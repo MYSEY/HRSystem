@@ -232,22 +232,6 @@ class EmployeeCrudController extends CrudController
         );
     }
 
-    public function update($id)
-    {
-        $this->crud->addField([
-            'name' => 'updated_by',
-            'type' => 'hidden'
-        ]);
-        request()->merge([
-            'updated_by' => Auth::id()
-        ]);
-        $entry = $this->crud->getEntry($id);
-        $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
-        $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
-        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
-        $this->employeeRepo->StaffPromotedRepoUpdateOrCreate($entry, $this->crud->getRequest());
-        return $this->traitUpdate();
-    }
     /**
      * Define what happens when the Create operation is loaded.
      * 
@@ -262,8 +246,8 @@ class EmployeeCrudController extends CrudController
         $tabOne = 'Employee Info';
         $tabTwo = "Education";
         $tabThree = "Experience";
-        $tabFour = "Banks";
-        $tabFive = "Staff Promoted";
+        $tabFour = "Promoted";
+        $tabFive = "trainings";
         
         $this->crud->addField([
             'name'  => 'number_employee',
@@ -401,6 +385,35 @@ class EmployeeCrudController extends CrudController
             'name'  => 'remark',
             'label' => 'Remark',
             'type'  => 'textarea',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        // Bank Info
+        $this->crud->addField([
+            'name' => 'Bank Info',
+            'type' => 'custom_html',
+            'value' => $this->startLabel .'Bank Info'. $this->endLabel,
+            'tab' => $tabOne,
+            'wrapperAttributes' => $colMd12,
+        ]);
+        $this->crud->addField([
+            'name'  => 'bank_name',
+            'label' => 'Bank Name',
+            'type'  => 'text',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'account_name',
+            'label' => 'Account Name',
+            'type'  => 'text',
+            'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne
+        ]);
+        $this->crud->addField([
+            'name'  => 'account_number',
+            'label' => 'Account Number',
+            'type'  => 'text',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
@@ -591,13 +604,14 @@ class EmployeeCrudController extends CrudController
             'type' => 'employee.experience',
             'tab' => $tabThree,
         ]);
-        // employee bank
+        // employee training
         $this->crud->addField([
-            'label' => 'banks',
-            'name' => 'banks',
-            'type' => 'employee.banks',
-            'tab' => $tabFour,
+            'label' => 'training',
+            'name' => 'training',
+            'type' => 'employee.training',
+            'tab' => $tabFive,
         ]);
+       
         if (Request::instance()->segment(3) == 'create') {
 
         } else {
@@ -605,7 +619,7 @@ class EmployeeCrudController extends CrudController
                 'label' => 'staff_promoted',
                 'name' => 'staff_promoted',
                 'type' => 'employee.staff_promoted',
-                'tab' => $tabFive,
+                'tab' => $tabFour,
             ]);
         }
     }
@@ -636,6 +650,22 @@ class EmployeeCrudController extends CrudController
         return $this->traitStore();
     }
 
+    public function update($id)
+    {
+        $this->crud->addField([
+            'name' => 'updated_by',
+            'type' => 'hidden'
+        ]);
+        request()->merge([
+            'updated_by' => Auth::id()
+        ]);
+        $entry = $this->crud->getEntry($id);
+        $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
+        $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
+        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
+        $this->employeeRepo->StaffPromotedRepoUpdateOrCreate($entry, $this->crud->getRequest());
+        return $this->traitUpdate();
+    }
     /**
      * Define what happens when the Update operation is loaded.
      * 

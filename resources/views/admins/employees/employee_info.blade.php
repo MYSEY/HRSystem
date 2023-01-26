@@ -90,6 +90,30 @@
                 {{ $entry->employment_book ?? ''}}
             </td>
         </tr>
+        <tr class="bg-white">
+            <td colspan="6" class="p-0">
+                <label class="custom-navbar-brand mb-0" style="font-weight: bolder; padding: 5px 10px;">Bank Info</label>
+            </td>
+        </tr>
+        <tr> 
+            <td class="border-0 font-weight-bold">Bank Name</td>
+            <td class="border-0">:</td>
+            <td class="border-0">
+                {{ $entry->bank_name ?? '' }}
+            </td>
+            <td class="border-0 font-weight-bold">Accout Name</td>
+            <td class="border-0">:</td>
+            <td class="border-0">
+                {{ $entry->account_name ?? ''}}
+            </td>
+        </tr>
+        <tr> 
+            <td class="border-0 font-weight-bold">Bank Name</td>
+            <td class="border-0">:</td>
+            <td class="border-0">
+                {{ $entry->account_number ?? '' }}
+            </td>
+        </tr>
 
         <tr class="bg-white">
             <td colspan="6" class="p-0">

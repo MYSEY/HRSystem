@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Option;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Experience extends Model
 {
@@ -21,4 +22,14 @@ class Experience extends Model
         'description',
         'updated_by'
     ];
+
+    public function getEmpEmploymentTypeAttribute(){
+        $data = Option::where('type','experience')->get();
+        foreach($data as $item){
+            if($this->employment_type == $item->id){
+                $Emploype = $item->name_khmer;
+            }
+        }
+        return $Emploype;
+    }
 }

@@ -19,15 +19,16 @@ trait UploadFIle
         return $data;
     }
 
-    public function singleUpload($attr, $request, $thumbnail = true)
+    public function singleUpload($attr, $request)
     {
         $filename = '';
         if ($request->hasFile($attr)) {
             $file = $request->file($attr);
             if ($file->isValid()) {
                 $filename = self::generatFileName($file);
-                $file->storeAs($this->funcGlobal()['original_path'], $filename, $this->funcGlobal()['upload_disk']);
-                if ($thumbnail) {
+                // dd($this->funcGlobal()['upload_disk']);
+                $file->storeAs($this->funcGlobal()['original_path'], $filename);
+                if ($file) {
                     self::createThumbnail($file, $filename);
                 }
             }
