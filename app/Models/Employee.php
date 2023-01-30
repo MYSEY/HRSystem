@@ -13,6 +13,7 @@ use App\Models\Experience;
 use Illuminate\Support\Str;
 use App\Traits\AddressTrait;
 use App\Models\StaffPromoted;
+use App\Models\StaffTraining;
 use App\Traits\UploadFiles\UploadFIle;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -81,7 +82,9 @@ class Employee extends Model
     {
         return $this->belongsTo(StaffPromoted::class, 'employee_id', 'id');
     }
-    
+    public function training(){
+        return $this->hasMany(StaffTraining::class,'employee_id','id');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

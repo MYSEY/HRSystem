@@ -89,7 +89,7 @@
             </div>
         @endif
     @else 
-        @if(Session::getOldInput())
+        {{-- @if(Session::getOldInput())
             @foreach(Session::get('school') as $key => $old)
                 <div class="row education-repeatable-element repeatable-element mt-3">
                     <button type="button" class="close education-delete-element delete-element"><span aria-hidden="true">×</span></button>
@@ -175,7 +175,42 @@
                     <textarea class="form-control" rows="3" name="education_description[]"></textarea>
                 </div>
             </div>
-        @endif
+        @endif --}}
+        <div class="row education-repeatable-element repeatable-element mt-3">
+            <button type="button" class="close education-delete-element delete-element"><span aria-hidden="true">×</span></button>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>School</label>
+                <input type="text" class="form-control" name="school[]"/>
+            </div>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Degree</label>
+                <select name="degree[]" class="form-control degree">
+                    <option value="" disabled selected>select degree</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Field Of Study</label>
+                <select name="field_of_study[]" class="form-control field-of-study">
+                    <option value="" disabled selected>select field of study</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6 col-12">    
+                <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">Start Date</span></label>
+                <input type="date" name="education_start_date[]" class="form-control">
+            </div>
+            <div class="form-group col-md-6 col-12">    
+                <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">End Date</span></label>
+                <input type="date" name="education_end_date[]" class="form-control">
+            </div>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Grade</label>
+                <input type="text" class="form-control" name="grade[]"/>
+            </div>
+            <div class="col-sm-12 col-md-12 mb-3">
+                <label>Description</label>
+                <textarea class="form-control" rows="3" name="education_description[]"></textarea>
+            </div>
+        </div>
     @endif
 </div>
 <div class="form-group col-md-12">

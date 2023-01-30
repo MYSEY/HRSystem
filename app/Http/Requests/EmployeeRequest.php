@@ -35,7 +35,7 @@ class EmployeeRequest extends FormRequest
             'company_phone_number' => 'required|min:9|max:15',
             'agency_phone_number' => 'required|min:9|max:15',
             // 'current_addtress'       => 'sometimes|nullable|numeric',
-            'email'          => 'required|email',
+            // 'email'          => 'required|email',
         ];
     }
 

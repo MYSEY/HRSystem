@@ -9,6 +9,9 @@
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#experience" role="tab" aria-controls="experience" aria-selected="false">Experiences</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#training" role="tab" aria-controls="training" aria-selected="false">Trainings</a>
+        </li>
     </ul>
     <div class="tab-content" id="employeeContent" table-responsive>
         <div class="tab-pane fade show active" id="employee" role="tabpanel">
@@ -21,6 +24,10 @@
         </div>
         <div class="tab-pane fade show" id="experience" role="tabpanel">
             @component('admins.employees.experience', compact('entry'))
+            @endcomponent
+        </div>
+        <div class="tab-pane fade show" id="training" role="tabpanel">
+            @component('admins.employees.training', compact('entry'))
             @endcomponent
         </div>
     </div>

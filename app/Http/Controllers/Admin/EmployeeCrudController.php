@@ -9,6 +9,8 @@ use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Department;
 use App\Models\StaffPromoted;
+use App\Traits\GeneratingCode;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
 use Illuminate\Support\Facades\Request;
@@ -24,6 +26,8 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class EmployeeCrudController extends CrudController
 {
+    use GeneratingCode;
+
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
@@ -120,12 +124,12 @@ class EmployeeCrudController extends CrudController
         $this->crud->addColumn([
             'name'  => 'employee_name_en',
             'type'  => 'text',
-            'label' => 'Employee Name (EN)'
+            'label' => 'Name (EN)'
         ]);
         $this->crud->addColumn([
             'name'  => 'employee_name_kh',
             'type'  => 'text',
-            'label' => 'Employee Name (KH)'
+            'label' => 'Name (KH)'
         ]);
     
         $this->crud->addColumn([
@@ -146,17 +150,17 @@ class EmployeeCrudController extends CrudController
         $this->crud->addColumn([
             'name'  => 'EmployeeDepartment',
             'label' => 'Department',
-            'type'  => 'closure',
-            'attribute' => 'name',
-            'function' => function ($entry) {
-                return optional($entry->department)->name;
-            },
-            'searchLogic' => function ($query, $column, $searchTerm) {
-                $query->orWhereHas('department', function ($q) use ($column, $searchTerm) {
-                    $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
-                        ->orWhere('name', 'like', '%' . $searchTerm . '%');
-                });
-            }
+            'type'  => 'text',
+            // 'attribute' => 'name',
+            // 'function' => function ($entry) {
+            //     return optional($entry->department)->name;
+            // },
+            // 'searchLogic' => function ($query, $column, $searchTerm) {
+            //     $query->orWhereHas('department', function ($q) use ($column, $searchTerm) {
+            //         $q->where($column['attribute'], 'like', '%' . $searchTerm . '%')
+            //             ->orWhere('name', 'like', '%' . $searchTerm . '%');
+            //     });
+            // }
         ]);
         
         $this->crud->addColumn([
@@ -230,6 +234,15 @@ class EmployeeCrudController extends CrudController
                 }
             ],
         );
+
+        $this->crud->addColumn([
+            'name'  => 'status',
+            'label' => 'status',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return Helper::statuslist($entry->status);
+            }
+        ]);
     }
 
     /**
@@ -244,9 +257,9 @@ class EmployeeCrudController extends CrudController
         $colMd6 = ['class' => 'form-group col-md-6 col-12']; 
         $colMd12 = ['class' => 'form-group col-md-12 col-12'];
         $tabOne = 'Employee Info';
-        $tabTwo = "Education";
-        $tabThree = "Experience";
-        $tabFour = "Promoted";
+        $tabTwo = "Educations";
+        $tabThree = "Experiences";
+        $tabFour = "Promoteds";
         $tabFive = "trainings";
         
         $this->crud->addField([
@@ -254,7 +267,11 @@ class EmployeeCrudController extends CrudController
             'label' => 'Employee ID',
             'type'  => 'text',
             'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
+            'tab'   =>  $tabOne,
+            'default' => $this->generate_EmployeeId(Carbon::today())['number_employee'],
+            'attributes' => [
+                'readonly' => 'readonly',
+            ],
         ]);
         $this->crud->addField([
             'name'  => 'employee_name_kh',
@@ -282,9 +299,19 @@ class EmployeeCrudController extends CrudController
         $this->crud->addField([
             'name'  => 'date_of_birth',
             'label' => 'Date Of Birth',
-            'type'  => 'date',
+            'type'  => 'datepicker',
+            'generatNextFieldDate' => true,
             'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
+            'tab'   =>  $tabOne,
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'dd-mm-yyyy',
+                'todayHighlight' => true,
+            ],
+            'attributes' => [
+                'class' => 'form-control requested-date',
+                'placeholder' => 'dd-mm-yyyy'
+            ],
         ]);
         $this->crud->addField([
             'name'        => 'nationality',
@@ -341,9 +368,19 @@ class EmployeeCrudController extends CrudController
         $this->crud->addField([
             'name'  => 'date_of_commencement',
             'label' => 'Date Of Commencement',
-            'type'  => 'date',
+            'type'  => 'datepicker',
+            'generatNextFieldDate' => true,
             'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
+            'tab'   =>  $tabOne,
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'dd-mm-yyyy',
+                'todayHighlight' => true,
+            ],
+            'attributes' => [
+                'class' => 'form-control requested-date',
+                'placeholder' => 'dd-mm-yyyy'
+            ],
         ]);
 
         $this->crud->addField([
@@ -646,7 +683,7 @@ class EmployeeCrudController extends CrudController
         $entry = $this->crud->entry;
         $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
         $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
-        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
+        $this->employeeRepo->trainingRepoUpdateOrCreate($entry, $this->crud->getRequest());
         return $this->traitStore();
     }
 
@@ -662,7 +699,7 @@ class EmployeeCrudController extends CrudController
         $entry = $this->crud->getEntry($id);
         $this->employeeRepo->updateOrCreateEducation($entry, $this->crud->getRequest());
         $this->employeeRepo->updateOrCreateExperience($entry, $this->crud->getRequest());
-        $this->employeeRepo->bankRepoUpdateOrCreate($entry, $this->crud->getRequest());
+        $this->employeeRepo->trainingRepoUpdateOrCreate($entry, $this->crud->getRequest());
         $this->employeeRepo->StaffPromotedRepoUpdateOrCreate($entry, $this->crud->getRequest());
         return $this->traitUpdate();
     }

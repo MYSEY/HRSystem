@@ -12,7 +12,7 @@
                         <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">Start Date</span></label>
                         <input type="date" name="start_date[]" class="form-control" value="{{$item->start_date}}">
                     </div>
-                    <div class="form-group col-md-6 col-12">    
+                    <div class="form-group col-md-6 col-12">
                         <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">End Date</span></label>
                         <input type="date" name="end_date[]" class="form-control" value="{{$item->end_date}}">
                     </div>
@@ -36,7 +36,7 @@
             </div>
         @endif
     @else 
-        @if(Session::getOldInput())
+        {{-- @if(Session::getOldInput())
             @foreach(Session::get('title') as $key => $old)
                 <div class="row training-repeatable-element repeatable-element mt-3">
                     <button type="button" class="close training-delete-element delete-element"><span aria-hidden="true">×</span></button>
@@ -70,7 +70,22 @@
                     <input type="date" name="end_date[]" class="form-control">
                 </div>
             </div>
-        @endif
+        @endif --}}
+        <div class="row training-repeatable-element repeatable-element mt-3">
+            <button type="button" class="close training-delete-element delete-element"><span aria-hidden="true">×</span></button>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Title</label>
+                <input type="text" class="form-control" name="title[]"/>
+            </div>
+            <div class="form-group col-md-6 col-12">    
+                <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">Start Date</span></label>
+                <input type="date" name="start_date[]" class="form-control">
+            </div>
+            <div class="form-group col-md-6 col-12">    
+                <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">End Date</span></label>
+                <input type="date" name="end_date[]" class="form-control">
+            </div>
+        </div>
     @endif
 </div>
 <div class="form-group col-md-12">

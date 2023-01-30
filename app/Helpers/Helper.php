@@ -224,30 +224,19 @@ class Helper
     static function statuslist($status)
     {
         $returnValue = '';
-        $status_paid_off = trans('flexi.paid_off');
-        $start_tags = '<span class="text-success"><strong>';
         $end_tags = '</strong></span>';
         switch (strtolower($status)) {
             case 'new':
-                $returnValue = '<span class="text-warning"><strong>' . trans('flexi.new') .  $end_tags;
+                $returnValue = '<span class="text-warning"><strong>' . 'new' .  $end_tags;
                 break;
             case 'approval':
-                $returnValue = '<span class="text-primary"><strong>' . trans('flexi.active') . $end_tags;
+                $returnValue = '<span class="text-primary"><strong>' . 'approval' . $end_tags;
                 break;
             case 'active':
-                $returnValue = '<span class="text-primary"><strong>' . trans('flexi.active') . $end_tags;
+                $returnValue = '<span class="text-primary"><strong>' . 'active' . $end_tags;
                 break;
             case 'rejected':
-                $returnValue = '<span class="text-danger"><strong>' . trans('flexi.rejected') . $end_tags;
-                break;
-            case 'closed':
-                $returnValue = $start_tags . $status_paid_off . $end_tags;
-                break;
-            case 'payoff':
-                $returnValue = $start_tags . $status_paid_off . $end_tags;
-                break;
-            case 'paid off':
-                $returnValue = $start_tags . $status_paid_off . $end_tags;
+                $returnValue = '<span class="text-danger"><strong>' . 'rejected' . $end_tags;
                 break;
             default:
                 $returnValue = '<span class="text-warning"><strong>Pending</strong> ' . '</span>';

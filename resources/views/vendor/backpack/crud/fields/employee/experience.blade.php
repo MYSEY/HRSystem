@@ -78,7 +78,7 @@
             </div>
         @endif
     @else 
-        @if(Session::getOldInput())
+        {{-- @if(Session::getOldInput())
             @foreach(Session::get('title') as $key => $old)
                 <div class="row experience-repeatable-element repeatable-element mt-3">
                     <button type="button" class="close experience-delete-element delete-element"><span aria-hidden="true">×</span></button>
@@ -154,7 +154,40 @@
                     <textarea class="form-control" rows="3" name="description[]"></textarea>
                 </div>
             </div>
-        @endif
+        @endif --}}
+        <div class="row experience-repeatable-element repeatable-element mt-3">
+            <button type="button" class="close experience-delete-element delete-element"><span aria-hidden="true">×</span></button>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Title</label>
+                <input type="text" class="form-control" name="title[]"/>
+            </div>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Employment Type</label>
+                <select name="employment_type[]" class="form-control employment-type">
+                    <option value="" disabled selected>select employment type</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Company Name</label>
+                <input type="text" class="form-control" name="company_name[]"/>
+            </div>
+            <div class="form-group col-md-6 col-12">    
+                <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">Start Date</span></label>
+                <input type="date" name="start_date[]" class="form-control">
+            </div>
+            <div class="form-group col-md-6 col-12">    
+                <label><span data-toggle="tooltip" data-placement="top" title="Tooltip on top">End Date</span></label>
+                <input type="date" name="end_date[]" class="form-control">
+            </div>
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label>Location</label>
+                <input type="text" class="form-control" name="location[]"/>
+            </div>
+            <div class="col-sm-12 col-md-12 mb-3">
+                <label>Description</label>
+                <textarea class="form-control" rows="3" name="description[]"></textarea>
+            </div>
+        </div>
     @endif
 </div>
 <div class="form-group col-md-12">

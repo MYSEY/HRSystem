@@ -3,7 +3,7 @@
 namespace App\Repositories\Admin;
 
 use Carbon\Carbon;
-use App\Models\Bank;
+use App\Models\StaffTraining;
 use App\Models\Employee;
 use App\Models\Education;
 use App\Models\Experience;
@@ -11,12 +11,6 @@ use App\Models\StaffPromoted;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\UploadFiles\UploadFIle;
-
-/**
- * Class BankRepository
- * @package App\Repositories\V1\Bank
- * @version July 20, 2020, 3:07 am UTC
- */
 
 class EmployeeRepository extends BaseRepository
 {
@@ -101,20 +95,20 @@ class EmployeeRepository extends BaseRepository
         }
     }
 
-    public function bankRepoUpdateOrCreate($entry, $request){
+    public function trainingRepoUpdateOrCreate($entry, $request){
         try {
-            Bank::where('employee_id', $entry->id)->delete();
-            $data = $request->bank_name;
+            StaffTraining::where('employee_id', $entry->id)->delete();
+            $data = $request->title;
             if (is_array($data) && count($data)) {
                 foreach ($data as $key => $item) :
                     if (!empty($item)) :
-                        Bank::updateOrCreate([
+                        StaffTraining::updateOrCreate([
                             'employee_id' => $entry->id,
                         ],[
                             'employee_id'       => $entry->id,
-                            'bank_name'         => $request->bank_name[$key] ?? '',
-                            'account_name'      => $request->account_name[$key] ?? '',
-                            'account_number'    => $request->account_number[$key] ?? '',
+                            'title'         => $request->title[$key] ?? '',
+                            'start_date'      => $request->start_date[$key] ?? '',
+                            'end_date'    => $request->end_date[$key] ?? '',
                             'updated_by'        => Auth::id(),
                         ]);
                     endif;
