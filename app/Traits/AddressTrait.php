@@ -118,8 +118,7 @@ trait AddressTrait
     /////////////////////////////
     public static function queryAddress($code)
     {
-        return Address::select('_code', '_path_en', '_path_kh', '_type_en', '_type_kh')
-            ->where('_code', $code)->first();
+        return Address::select('_code', '_path_en', '_path_kh', '_type_en', '_type_kh')->where('_code', $code)->first();
     }
     /////////////////////////////
     // GET ADDRESS BY ADDRESS STRING CODE

@@ -1,4 +1,4 @@
-<header class="{{ config('backpack.base.header_class') }}">
+<header class="{{ config('backpack.base.header_class') }}" style="background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);">
   <!-- Logo -->
   <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto ml-3" type="button" data-toggle="sidebar-show" aria-label="{{ trans('backpack::base.toggle_navigation')}}">
     <span class="navbar-toggler-icon"></span>

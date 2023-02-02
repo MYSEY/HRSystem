@@ -59,7 +59,7 @@ class CreateEmployeesTable extends Migration
             $table->string('account_name')->nullable();
             $table->string('account_number')->nullable();
             $table->boolean('active')->default(1);
-            $table->string('status')->default('new');
+            $table->string('status')->default('Probation');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->dateTime('deleted_at')->nullable();

@@ -16,6 +16,7 @@ use App\Models\StaffPromoted;
 use App\Models\StaffTraining;
 use App\Traits\UploadFiles\UploadFIle;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
 class Employee extends Model
@@ -23,8 +24,7 @@ class Employee extends Model
     use CrudTrait;
     use UploadFIle;
     use AddressTrait;
-
-
+    use SoftDeletes;
 
     /*
     |--------------------------------------------------------------------------

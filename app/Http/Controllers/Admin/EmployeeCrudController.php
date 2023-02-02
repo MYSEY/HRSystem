@@ -8,9 +8,10 @@ use App\Models\Branchs;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Department;
-use App\Models\StaffPromoted;
+use App\Traits\AddressTrait;
 use App\Traits\GeneratingCode;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
 use Illuminate\Support\Facades\Request;
@@ -27,11 +28,12 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 class EmployeeCrudController extends CrudController
 {
     use GeneratingCode;
+    use AddressTrait;
 
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation{  destroy as traitDestroy; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     /**
@@ -49,6 +51,10 @@ class EmployeeCrudController extends CrudController
         $this->employeeRepo = resolve(EmployeeRepository::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/employee');
         CRUD::setEntityNameStrings('employee', 'employees');
+        if (request()->trashed) {
+            $this->crud->denyAccess(['update', 'delete', 'show']);
+            $this->crud->addButtonFromView('line', 'restore', 'restore', 'beginning');
+        }
     }
 
     /**
@@ -61,6 +67,17 @@ class EmployeeCrudController extends CrudController
     {
         $this->crud->disableResponsiveTable();
 
+        $this->crud->addFilter(
+            [
+                'type' => 'simple',
+                'name' => 'trashed',
+                'label' => 'Trashed'
+            ],
+            false,
+            function () { // if the filter is active
+                $this->crud->query = $this->crud->query->onlyTrashed();
+            }
+        );
         $this->crud->addFilter([
             'name'  => 'employee_name_en',
             'type'  => 'select2',
@@ -275,14 +292,14 @@ class EmployeeCrudController extends CrudController
         ]);
         $this->crud->addField([
             'name'  => 'employee_name_kh',
-            'label' => 'Employee Name (KH)',
+            'label' => 'Name (KH)',
             'type'  => 'text',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
         ]);
         $this->crud->addField([
             'name'  => 'employee_name_en',
-            'label' => 'Employee Name (EN)',
+            'label' => 'Name (EN)',
             'type'  => 'text',
             'wrapperAttributes' => $colMd6,
             'tab'   =>  $tabOne
@@ -534,15 +551,36 @@ class EmployeeCrudController extends CrudController
             'label' => 'Issue Date',
             'type' => "date",
             'name' => 'issue_date',
-            'tab' => $tabOne,
+            'type'  => 'datepicker',
+            'generatNextFieldDate' => true,
             'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne,
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'dd-mm-yyyy',
+                'todayHighlight' => true,
+            ],
+            'attributes' => [
+                'class' => 'form-control requested-date',
+                'placeholder' => 'dd-mm-yyyy'
+            ],
         ]);
         $this->crud->addField([
             'label' => 'Issue Expired Date',
-            'type' => "date",
             'name' => 'issue_expired_date',
-            'tab' => $tabOne,
+            'type'  => 'datepicker',
+            'generatNextFieldDate' => true,
             'wrapperAttributes' => $colMd6,
+            'tab'   =>  $tabOne,
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'dd-mm-yyyy',
+                'todayHighlight' => true,
+            ],
+            'attributes' => [
+                'class' => 'form-control requested-date',
+                'placeholder' => 'dd-mm-yyyy'
+            ],
         ]);
 
         // Current Address
@@ -702,6 +740,33 @@ class EmployeeCrudController extends CrudController
         $this->employeeRepo->trainingRepoUpdateOrCreate($entry, $this->crud->getRequest());
         $this->employeeRepo->StaffPromotedRepoUpdateOrCreate($entry, $this->crud->getRequest());
         return $this->traitUpdate();
+    }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+        $entry = $this->crud->model->withTrashed()->find($id);
+        DB::beginTransaction();
+        try {
+            if (request()->force_delete) {
+                $entry->experiences()->forceDelete();
+                $entry->educations()->forceDelete();
+                $entry->staffPromoted()->forceDelete();
+                $entry->training()->forceDelete();
+                DB::commit();
+                return (string) $entry->forceDelete();
+            } else {
+                $entry->experiences()->delete();
+                $entry->educations()->delete();
+                $entry->staffPromoted()->delete();
+                $entry->training()->delete();
+                DB::commit();
+                return (string) $entry->delete();
+            }
+        } catch (\Exception $exp) {
+            DB::rollBack();
+            return response()->json(['message' => $exp->getMessage()], 500);
+        }
     }
     /**
      * Define what happens when the Update operation is loaded.

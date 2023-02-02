@@ -92,7 +92,6 @@
             },
             villageChange:function(){
                 this.hidden = this.frm.village;
-                console.log(this.hidden);
             },
             getData:function(code=''){
                 if(code){ 
