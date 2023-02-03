@@ -92,6 +92,40 @@
         </tr>
         <tr class="bg-white">
             <td colspan="6" class="p-0">
+                <label class="custom-navbar-brand mb-0" style="font-weight: bolder; padding: 5px 10px;">Staff Promoted Info</label>
+            </td>
+        </tr>
+        @if (count($entry->staffPromoted)>0)
+            @foreach ($entry->staffPromoted as $item)
+                <tr> 
+                    <td class="border-0 font-weight-bold">Position</td>
+                    <td class="border-0">:</td>
+                    <td class="border-0">
+                        {{ $item->PostionPromoted ?? '' }}
+                    </td>
+                    <td class="border-0 font-weight-bold">Department</td>
+                    <td class="border-0">:</td>
+                    <td class="border-0">
+                        {{ $item->DepartmentPromoted ?? ''}}
+                    </td>
+                </tr>
+            @endforeach
+        @else
+            <tr> 
+                <td colspan="6" style="text-align: center" class="border-0 font-weight-bold">Staff no promote</td>
+            </tr>
+        @endif
+        <tr> 
+            <td class="border-0 font-weight-bold">Promoted Date</td>
+            <td class="border-0">:</td>
+            <td class="border-0">
+                {{\Carbon\Carbon::parse($item->date)->format('d-M-Y') ?? '' }}
+            </td>
+        </tr>
+        
+
+        <tr class="bg-white">
+            <td colspan="6" class="p-0">
                 <label class="custom-navbar-brand mb-0" style="font-weight: bolder; padding: 5px 10px;">Bank Info</label>
             </td>
         </tr>
@@ -108,9 +142,9 @@
             </td>
         </tr>
         <tr> 
-            <td class="border-0 font-weight-bold">Bank Name</td>
+            <td class="border-0 font-weight-bold">Account Number</td>
             <td class="border-0">:</td>
-            <td class="border-0">
+            <td colspan="6" class="border-0">
                 {{ $entry->account_number ?? '' }}
             </td>
         </tr>

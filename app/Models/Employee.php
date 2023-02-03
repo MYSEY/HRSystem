@@ -80,7 +80,7 @@ class Employee extends Model
     
     public function staffPromoted()
     {
-        return $this->belongsTo(StaffPromoted::class, 'employee_id', 'id');
+        return $this->hasMany(StaffPromoted::class, 'employee_id', 'id');
     }
     public function training(){
         return $this->hasMany(StaffTraining::class,'employee_id','id');

@@ -225,8 +225,8 @@ class Helper
         $returnValue = '';
         $end_tags = '</strong></span>';
         switch (strtolower($status)) {
-            case 'new':
-                $returnValue = '<span class="text-warning"><strong>' . 'new' .  $end_tags;
+            case 'Probation':
+                $returnValue = '<span class="text-warning"><strong>' . 'Probation' .  $end_tags;
                 break;
             case 'approval':
                 $returnValue = '<span class="text-primary"><strong>' . 'approval' . $end_tags;
@@ -238,7 +238,9 @@ class Helper
                 $returnValue = '<span class="text-danger"><strong>' . 'rejected' . $end_tags;
                 break;
             default:
-                $returnValue = '<span class="text-warning"><strong>Pending</strong> ' . '</span>';
+                $returnValue = '<div class="action-label">
+                    <a class="btn btn-white btn-sm btn-rounded" style="border-radius: 50px;background-color: #198754;border: 1px solid #cccccc;color: white;" href="javascript:void(0);">Probation</a>
+                </div>';
         }
         return $returnValue;
     }

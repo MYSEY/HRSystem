@@ -126,10 +126,12 @@ class EmployeeRepository extends BaseRepository
                 'employee_id'   => $entry->id,
                 'posit_id'      => $request->posit_id ?? '',
                 'depart_id'     => $request->depart_id ?? '',
+                'date'          => $request->date ?? '',
             ],[
                 'employee_id'   => $entry->id,
                 'posit_id'      => $request->posit_id ?? '',
                 'depart_id'     => $request->depart_id ?? '',
+                'date'          => $request->date ?? '',
                 'updated_by'    => Auth::id(),
             ]);
         } catch (\Exception $exp) {

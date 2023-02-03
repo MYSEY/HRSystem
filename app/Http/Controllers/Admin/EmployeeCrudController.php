@@ -278,6 +278,7 @@ class EmployeeCrudController extends CrudController
         $tabThree = "Experiences";
         $tabFour = "Promoteds";
         $tabFive = "trainings";
+        $tabSix = "fixed duration contract";
         
         $this->crud->addField([
             'name'  => 'number_employee',
@@ -425,15 +426,6 @@ class EmployeeCrudController extends CrudController
             'tab'   =>  $tabOne
         ]);
         
-        $this->crud->addField([
-            'name'  => 'fixed_dura_con_type',
-            'label' => 'Duration Type',
-            'type'        => 'select2_from_array',
-            'options'     => ['1' => 'FDC', '2' => 'UDC'],
-            'allows_null' => false,
-            'wrapperAttributes' => $colMd6,
-            'tab'   =>  $tabOne
-        ]);
 
         $this->crud->addField([
             'name'  => 'remark',
@@ -697,6 +689,17 @@ class EmployeeCrudController extends CrudController
                 'tab' => $tabFour,
             ]);
         }
+        if (Request::instance()->segment(3) == 'create') {
+
+        } else {
+            $this->crud->addField([
+                'label' => 'fixed duration contract',
+                'name' => 'fixed_dura_con_type',
+                'type' => 'employee.fixed_duration',
+                'tab' => $tabSix,
+            ]);
+        }
+        
     }
 
     public function show($id)
